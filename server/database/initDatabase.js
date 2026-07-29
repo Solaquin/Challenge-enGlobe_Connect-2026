@@ -1,5 +1,7 @@
 import db from "../config/database.js";
 
+// Initialize the database and create tables if they don't exist
+
 export function initDatabase() {
 
     db.exec(`
@@ -8,7 +10,7 @@ export function initDatabase() {
         name TEXT NOT NULL,
         email TEXT NOT NULL UNIQUE,
         password_hash TEXT NOT NULL,
-        role TEXT NOT NULL DEFAULT 'user' CHECK(role IN ('user','creator', 'approver')),
+        role TEXT NOT NULL DEFAULT 'creator' CHECK(role IN ('creator', 'approver')),
         created_at DATETIME DEFAULT CURRENT_TIMESTAMP
     );
 
