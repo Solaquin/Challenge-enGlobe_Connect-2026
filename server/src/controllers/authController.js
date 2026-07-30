@@ -121,3 +121,23 @@ export async function login(req, res) {
     }
 
 }
+
+export function me(req, res) {
+
+    const user = UserModel.getUserById(req.user.id);
+
+    if (!user) {
+        return res.status(404).json({
+            success: false,
+            message: "User not found"
+        });
+    }
+
+    delete user.password_hash;
+
+    res.json({
+        success: true,
+        data: user
+    });
+
+}

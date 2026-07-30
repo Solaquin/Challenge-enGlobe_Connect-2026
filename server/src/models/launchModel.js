@@ -59,10 +59,9 @@ export function createLaunch(launch) {
             market,
             release_date,
             status,
-            assets,
             created_by
         )
-        VALUES (?, ?, ?, ?, ?, ?, ?)
+        VALUES (?, ?, ?, ?, ?, ?)
     `);
 
     const result = stmt.run(
@@ -71,7 +70,6 @@ export function createLaunch(launch) {
         launch.market,
         launch.release_date,
         launch.status,
-        JSON.stringify(launch.assets),
         launch.created_by
     );
 
@@ -87,7 +85,6 @@ export function updateLaunch(id, launch) {
             description = ?,
             market = ?,
             release_date = ?,
-            assets = ?,
             updated_at = CURRENT_TIMESTAMP
         WHERE id = ?
     `);
@@ -97,7 +94,6 @@ export function updateLaunch(id, launch) {
         launch.description,
         launch.market,
         launch.release_date,
-        JSON.stringify(launch.assets),
         id
     );
 }

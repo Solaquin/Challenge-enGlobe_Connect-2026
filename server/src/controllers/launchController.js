@@ -15,14 +15,6 @@ export function getAllLaunches(req, res) {
 
         const launches = LaunchModel.getLaunches(filters);
 
-        launches.forEach(launch => {
-
-            launch.assets = launch.assets
-                ? JSON.parse(launch.assets)
-                : [];
-
-        });
-
         res.status(200).json({
 
             success: true,
@@ -56,10 +48,6 @@ export function getLaunchById(req, res) {
                 message: "Launch not found"
             });
         }
-
-        launch.assets = launch.assets
-            ? JSON.parse(launch.assets)
-            : [];
         
         res.json(launch);
     }
@@ -237,6 +225,10 @@ export function updateLaunchStatus(req, res) {
             published: []
 
         };
+
+        console.log("Estado actual:", launch.status);
+        console.log("Nuevo estado:", status);
+        console.log("Transiciones:", transitions[launch.status]);
 
         if (!transitions[launch.status].includes(status)) {
 
