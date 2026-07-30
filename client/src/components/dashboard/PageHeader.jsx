@@ -1,3 +1,5 @@
+import { Link } from "react-router-dom";
+
 function PageHeader() {
 
     return (
@@ -20,7 +22,8 @@ function PageHeader() {
 
             </div>
 
-            <button
+            <Link
+                to="/dashboard/launches/new"
                 className="
                     bg-violet-600
                     hover:bg-violet-700
@@ -32,7 +35,7 @@ function PageHeader() {
                 "
             >
                 + New Launch
-            </button>
+            </Link>
 
         </div>
 

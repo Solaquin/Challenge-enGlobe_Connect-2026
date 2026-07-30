@@ -29,14 +29,14 @@ function FilterBar({
                     placeholder="Search launch..."
                     value={filters.search}
                     onChange={handleChange}
-                    className="border-1 border-gray-300 rounded-lg px-4 py-2"
+                    className="outline-none border border-gray-300 rounded-lg px-4 py-2 focus:border-violet-500"
                 />
 
                 <select
                     name="status"
                     value={filters.status}
                     onChange={handleChange}
-                    className="border-1 border-gray-300 rounded-lg px-4 py-2"
+                    className="outline-none border border-gray-300 rounded-lg px-4 py-2 focus:border-violet-500"
                 >
 
                     <option value="">All Status</option>
@@ -53,7 +53,7 @@ function FilterBar({
                     placeholder="Market"
                     value={filters.market}
                     onChange={handleChange}
-                    className="border-1 border-gray-300 rounded-lg px-4 py-2"
+                    className="outline-none border border-gray-300 rounded-lg px-4 py-2 focus:border-violet-500"
                 />
 
                 <input
@@ -61,7 +61,7 @@ function FilterBar({
                     name="release_date"
                     value={filters.release_date}
                     onChange={handleChange}
-                    className="border-1 border-gray-300 rounded-lg px-4 py-2"
+                    className="outline-none border border-gray-300 rounded-lg px-4 py-2 focus:border-violet-500"
                 />
 
             </div>

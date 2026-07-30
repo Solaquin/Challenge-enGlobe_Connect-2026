@@ -1,4 +1,4 @@
-import { NavLink } from "react-router-dom";
+import { NavLink, Link } from "react-router-dom";
 import {
     FiHome,
     FiFolder,
@@ -34,7 +34,8 @@ function Sidebar() {
 
             <div className="p-5">
 
-                <button
+                <Link
+                    to="/dashboard/launches/new"
                     className="
                         w-full
                         flex
@@ -54,7 +55,7 @@ function Sidebar() {
 
                     New Launch
 
-                </button>
+                </Link>
 
             </div>
 
