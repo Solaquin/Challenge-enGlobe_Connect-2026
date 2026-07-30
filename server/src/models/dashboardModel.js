@@ -29,6 +29,9 @@ function getStats() {
         LIMIT 1
     `).get();
 
+
+    console.log(nextLaunch);
+
     return {
 
         active: total.total,
@@ -37,7 +40,7 @@ function getStats() {
 
         review: review.total,
 
-        nextLaunch
+        nextLaunch: nextLaunch ? { title: nextLaunch.title, release_date: nextLaunch.release_date } : null
 
     };
 

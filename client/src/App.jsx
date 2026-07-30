@@ -12,8 +12,14 @@ function App() {
                 <Route path="/login" element={<Login />} />
                 <Route path="/dashboard" element={
                     <ProtectedRoute>
-                        <Dashboard />
+                      <Dashboard />
                     </ProtectedRoute>
+                }/>
+
+                <Route path="/dashboard/launches/new" element={
+                  <ProtectedRoute>
+                    <CreateLaunch />
+                  </ProtectedRoute>
                 }/>
                 <Route path="*" element={<Navigate to="/login" replace />} />
             </Routes>

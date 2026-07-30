@@ -1,6 +1,6 @@
 import StatsCard from "./StatsCard";
 
-function StatsSection() {
+function StatsSection({stats}) {
 
     return (
 
@@ -8,22 +8,23 @@ function StatsSection() {
 
             <StatsCard
                 title="Active"
-                value="12"
+                value={stats?.active ?? 0}
             />
 
             <StatsCard
                 title="Approved"
-                value="45"
+                value={stats?.approved ?? 0}
             />
 
             <StatsCard
                 title="Pending"
-                value="8"
+                value={stats?.pending ?? 0}
             />
 
             <StatsCard
                 title="Next Launch"
-                value="Galaxy X"
+                value={stats?.nextLaunch?.title ?? "Galaxy X"}
+                subtitle={stats?.nextLaunch?.release_date}
                 color="bg-violet-600 text-white"
                 titleColor="text-white"
             />

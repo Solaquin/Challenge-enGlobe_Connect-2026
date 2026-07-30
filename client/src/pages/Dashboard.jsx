@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import LaunchService from "../services/launchService";
+import DashboardService from "../services/dashboardService";
 
 import Layout from "../components/layout/Layout";
 import LaunchTable from "../components/dashboard/LaunchTable";
@@ -10,6 +11,8 @@ import FilterBar from "../components/dashboard/FilterBar";
 function Dashboard() {
 
     const [launches, setLaunches] = useState([]);
+
+    const [stats, setStats] = useState(null);
 
     const [filters, setFilters] = useState({
 
@@ -26,8 +29,21 @@ function Dashboard() {
     useEffect(() => {
 
         loadLaunches();
+        loadStats();
 
     }, [filters]);
+
+    async function loadStats() {
+
+        try {
+            const response = await DashboardService.getStats();
+            console.log("Dashboard stats:", response.data);
+            setStats(response.data);
+
+        } catch (error) {
+            console.error(error);
+        }
+    }
 
     async function loadLaunches() {
 
@@ -53,7 +69,7 @@ function Dashboard() {
 
             <FilterBar filters={filters} setFilters={setFilters} />
 
-            <StatsSection />
+            <StatsSection stats={stats} />
 
             <LaunchTable launches={launches} />
 

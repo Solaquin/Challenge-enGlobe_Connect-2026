@@ -7,6 +7,7 @@ import launchRoutes from "./src/routes/launchRoutes.js";
 import authRoutes from "./src/routes/authRoutes.js";
 import assetRoutes from "./src/routes/assetRoutes.js";
 import statusHistoryRoutes from "./src/routes/statusHistoryRoutes.js";
+import dashboardRoutes from "./src/routes/dashboardRoutes.js";
 
 const corsOptions = {
   origin: ['http://localhost:5173'], 

@@ -6,7 +6,9 @@ function StatsCard({
 
     value,
 
-    color = "bg-white"
+    color = "bg-white",
+
+    subtitle = ""
 
 }) {
 
@@ -27,11 +29,15 @@ function StatsCard({
 
             </p>
 
-            <h2 className="text-4xl font-bold mt-2">
+            <h2 className="text-3xl font-bold truncate" title={value}>
 
                 {value}
 
             </h2>
+
+            <p className="text-sm text-white mt-1">
+                {subtitle}
+            </p>
 
         </div>
 
