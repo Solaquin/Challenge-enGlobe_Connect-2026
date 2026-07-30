@@ -6,6 +6,7 @@ import path from "path";
 import launchRoutes from "./src/routes/launchRoutes.js";
 import authRoutes from "./src/routes/authRoutes.js";
 import assetRoutes from "./src/routes/assetRoutes.js";
+import statusHistoryRoutes from "./src/routes/statusHistoryRoutes.js";
 
 const corsOptions = {
   origin: ['http://localhost:5173'], 
@@ -34,6 +35,7 @@ app.use("/api/launches", launchRoutes);
 app.use("/api/auth", authRoutes);
 
 app.use("/api", assetRoutes);
+app.use("/api", statusHistoryRoutes);
 
 
 app.get("/", (req, res) => {

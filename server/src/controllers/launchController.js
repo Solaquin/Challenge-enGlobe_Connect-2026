@@ -277,11 +277,13 @@ export function updateLaunchStatus(req, res) {
         
         }
 
-        LaunchModel.updateLaunchStatus(
-
-            launch.id,
-            status
-
+        LaunchModel.updateLaunchStatusWithHistory(
+            {
+                launchId: req.params.id,
+                previousStatus: launch.status,
+                newStatus: status,
+                changedBy: req.user.id
+            }
         );
 
         res.json({

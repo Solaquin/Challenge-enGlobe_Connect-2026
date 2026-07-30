@@ -121,3 +121,48 @@ export function updateLaunchStatus(id, status) {
     return stmt.run(status, id);
 
 }
+
+export function updateLaunchStatusWithHistory({launchId, previousStatus, newStatus, changedBy})
+{
+
+    const updateStmt = db.prepare(`
+        UPDATE launches
+        SET status = ?, updated_at = CURRENT_TIMESTAMP
+        WHERE id = ?
+    `);
+
+    const historyStmt = db.prepare(`
+        INSERT INTO launch_status_history
+        (
+            launch_id,
+            previous_status,
+            new_status,
+            changed_by
+        )
+        VALUES (?, ?, ?, ?)
+    `);
+
+    const transaction = db.transaction((data) => {
+
+        updateStmt.run(
+            data.newStatus,
+            data.launchId
+        );
+
+        historyStmt.run(
+            data.launchId,
+            data.previousStatus,
+            data.newStatus,
+            data.changedBy
+        );
+    });
+
+    transaction({
+        launchId,
+        previousStatus,
+        newStatus,
+        changedBy
+    });
+
+    return true;
+}
