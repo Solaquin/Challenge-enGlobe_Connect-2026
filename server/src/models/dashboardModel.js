@@ -5,6 +5,7 @@ function getStats() {
     const total = db.prepare(`
         SELECT COUNT(*) AS total
         FROM launches
+        WHERE NOT status = 'draft'
     `).get();
 
     const approved = db.prepare(`
@@ -24,7 +25,7 @@ function getStats() {
             title,
             release_date
         FROM launches
-        WHERE release_date >= DATE('now')
+        WHERE release_date >= DATE('now') and status = 'approved'
         ORDER BY release_date ASC
         LIMIT 1
     `).get();

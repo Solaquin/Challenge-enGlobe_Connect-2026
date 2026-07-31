@@ -10,7 +10,7 @@ export function getLaunchById(id) {
     return stmt.get(id);
 }
 
-export function getLaunches(filters = {}) {
+export function getLaunches(filters = {}, user) {
 
     let query = `
         SELECT *
@@ -19,6 +19,29 @@ export function getLaunches(filters = {}) {
     `;
 
     const params = [];
+
+    if (user.role === "creator") {
+
+        query += `
+            AND (
+                status != ?
+                OR created_by = ?
+            )
+        `;
+        
+        params.push("draft");
+        params.push(user.id);
+        
+    }
+    else if (user.role === "approver") {
+    
+        query += `
+            AND status != ?
+        `;
+    
+        params.push("draft");
+    
+    }
 
     const filterMap = {
         market: "market",

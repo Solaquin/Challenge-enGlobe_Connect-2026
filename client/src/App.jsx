@@ -4,8 +4,10 @@ import { Toaster } from "react-hot-toast"
 import Login from "./pages/Login";
 import Dashboard from "./pages/Dashboard";
 import CreateLaunch from "./pages/CreateLaunch";
+import LaunchDetail from "./pages/LaunchDetails"
 
 import ProtectedRoute from "./routes/protectedRoutes";
+import RoleProtectedRoute from "./routes/roleProtectedRoute";
 
 function App() {
     return (
@@ -19,6 +21,7 @@ function App() {
             />
             <Routes>
                 <Route path="/login" element={<Login />} />
+                
                 <Route path="/dashboard" element={
                     <ProtectedRoute>
                       <Dashboard />
@@ -26,10 +29,20 @@ function App() {
                 }/>
 
                 <Route path="/dashboard/launches/new" element={
-                  <ProtectedRoute>
+                  <RoleProtectedRoute allowedRoles={["creator"]}>
                     <CreateLaunch />
-                  </ProtectedRoute>
+                  </RoleProtectedRoute>
                 }/>
+
+                <Route
+                  path="/dashboard/launches/:id"
+                  element={
+                    <ProtectedRoute>
+                      <LaunchDetail />
+                    </ProtectedRoute>
+                  }
+              />
+
                 <Route path="*" element={<Navigate to="/login" replace />} />
             </Routes>
         </BrowserRouter>

@@ -1,6 +1,10 @@
 import { Link } from "react-router-dom";
 
+import { useAuth } from "../../context/AuthContext";
+
 function PageHeader() {
+
+    const { user } = useAuth();
 
     return (
 
@@ -21,21 +25,25 @@ function PageHeader() {
                 </p>
 
             </div>
-
-            <Link
-                to="/dashboard/launches/new"
-                className="
-                    bg-violet-600
-                    hover:bg-violet-700
-                    text-white
-                    px-6
-                    py-3
-                    rounded-xl
-                    font-medium
-                "
-            >
-                + New Launch
-            </Link>
+            {
+                user?.role === "creator" && (
+                    <Link
+                        to="/dashboard/launches/new"
+                        className="
+                            bg-violet-600
+                            hover:bg-violet-700
+                            text-white
+                            px-6
+                            py-3
+                            rounded-xl
+                            font-medium
+                        "
+                    >
+                        + New Launch
+                    </Link>
+                )
+            }
+            
 
         </div>
 

@@ -1,3 +1,6 @@
+import fs from "fs-extra";
+import path from "path";
+
 import * as LaunchModel from "../models/launchModel.js";
 
 export function getAllLaunches(req, res) {
@@ -13,7 +16,7 @@ export function getAllLaunches(req, res) {
 
         };
 
-        const launches = LaunchModel.getLaunches(filters);
+        const launches = LaunchModel.getLaunches(filters, req.user);
 
         res.status(200).json({
 
@@ -48,6 +51,32 @@ export function getLaunchById(req, res) {
                 message: "Launch not found"
             });
         }
+
+        if (launch.status === "draft") {
+
+            if (req.user.role === "approver") {
+            
+                return res.status(403).json({
+                
+                    success: false,
+                    message: "You don't have permission to access this launch."
+                
+                });
+            
+            }
+        
+            if (launch.created_by !== req.user.id) {
+            
+                return res.status(403).json({
+                
+                    success: false,
+                    message: "You don't have permission to access this launch."
+                
+                });
+
+    }
+
+}
         
         res.json(launch);
     }
@@ -95,6 +124,17 @@ export function updateLaunch(req,res){
     try{
 
         const launch = LaunchModel.getLaunchById(req.params.id);
+        
+        if (!launch) {
+
+            return res.status(404).json({
+
+                success: false,
+                message: "Launch not found"
+
+            });
+
+        }
 
         if (launch.created_by !== req.user.id) {
 
@@ -108,6 +148,16 @@ export function updateLaunch(req,res){
 
         }  
 
+        if (launch.status !== "draft") {
+
+            return res.status(403).json({
+
+                success: false,
+                message: "Only draft launches can be edited."
+
+            });
+
+        }
 
         const result = LaunchModel.updateLaunch(
 
@@ -116,19 +166,10 @@ export function updateLaunch(req,res){
 
         );
 
-        if(result.changes === 0){
-
-            return res.status(404).json({
-
-                message:"Launch not found"
-
-            });
-
-        }
-
         res.json({
 
-            message:"Launch updated"
+            success: true,
+            message: "Launch updated."
 
         });
 
@@ -153,18 +194,39 @@ export function deleteLaunch(req,res){
 
         const launch = LaunchModel.getLaunchById(req.params.id);
 
+        if (!launch) {
+
+            return res.status(404).json({
+
+                success: false,
+                message: "Launch not found."
+
+            });
+
+        }
+
         if (launch.created_by !== req.user.id) {
 
             return res.status(403).json({
 
                 success: false,
 
-                message: "You can only modify your own launches"
+                message: "You can only delete your own launches"
 
             });
 
         }   
 
+        if (launch.status !== "draft") {
+
+            return res.status(403).json({
+
+                success: false,
+                message: "Only draft launches can be deleted."
+
+            });
+
+        }
 
         const result = LaunchModel.deleteLaunch(req.params.id);
 
@@ -172,15 +234,25 @@ export function deleteLaunch(req,res){
 
             return res.status(404).json({
 
-                message:"Launch not found"
+                success: false,
+                message: "Launch not found."
 
             });
 
         }
 
-        res.json({
+        const launchFolder = path.join(
+            "uploads",
+            "launches",
+            req.params.id
+        );
 
-            message:"Launch deleted"
+        fs.remove(launchFolder);
+
+        res.status(200).json({
+
+            success: true,
+            message: "Launch deleted successfully."
 
         });
 
@@ -191,7 +263,8 @@ export function deleteLaunch(req,res){
 
         res.status(500).json({
 
-            message:"Internal server error"
+            success: false,
+            message: "Internal server error."
 
         });
 
@@ -202,6 +275,13 @@ export function deleteLaunch(req,res){
 
 export function updateLaunchStatus(req, res) {
 
+    const validStatuses = [
+        "draft",
+        "review",
+        "approved",
+        "published"
+    ];
+    
     try {
 
         const launch = LaunchModel.getLaunchById(req.params.id);
@@ -217,6 +297,17 @@ export function updateLaunchStatus(req, res) {
 
         const { status } = req.body;
 
+        if (!validStatuses.includes(status)) {
+
+            return res.status(400).json({
+            
+                success: false,
+                message: "Invalid status."
+            
+            });
+        
+        }
+
         const transitions = {
 
             draft: ["review"],
@@ -225,10 +316,6 @@ export function updateLaunchStatus(req, res) {
             published: []
 
         };
-
-        console.log("Estado actual:", launch.status);
-        console.log("Nuevo estado:", status);
-        console.log("Transiciones:", transitions[launch.status]);
 
         if (!transitions[launch.status].includes(status)) {
 
@@ -244,14 +331,26 @@ export function updateLaunchStatus(req, res) {
 
         if (
             launch.status === "draft" &&
-            status === "review" &&
-            req.user.role !== "creator"
+            status === "review"
         ) {
         
-            return res.status(403).json({
-                success: false,
-                message: "Only creators can submit launches for review."
-            });
+            if (req.user.role !== "creator") {
+            
+                return res.status(403).json({
+                    success: false,
+                    message: "Only creators can submit launches for review."
+                });
+            
+            }
+        
+            if (launch.created_by !== req.user.id) {
+            
+                return res.status(403).json({
+                    success: false,
+                    message: "You can only submit your own launches."
+                });
+            
+            }
         
         }
 

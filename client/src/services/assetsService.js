@@ -13,19 +13,22 @@ const AssetService = {
 
         });
 
-        for (const pair of formData.entries()) {
-        console.log(pair[0], pair[1]);
-        }
-
         const response = await api.post(
             `/launches/${launchId}/assets`,
             formData
         );
 
-        console.log(response.data)
-
         return response.data;
 
+    },
+
+    async getAssets(id) {
+
+        const response = await api.get(
+            `/launches/${id}/assets`
+        );
+
+        return response.data;
     }
 
 };

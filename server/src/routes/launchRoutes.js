@@ -2,6 +2,7 @@ import { Router } from "express";
 
 import { authenticateToken } from "../middleware/authMiddleware.js";
 import { authorizeRoles } from "../middleware/roleMiddleware.js";
+import { canEditLaunch } from "../middleware/launchPermisionMiddleware.js";
 
 import * as LaunchController from "../controllers/launchController.js";
 
@@ -13,7 +14,7 @@ router.get("/:id", authenticateToken, authorizeRoles("creator", "approver"), Lau
 
 router.post("/", authenticateToken, authorizeRoles("creator"), LaunchController.createLaunch);
 
-router.put("/:id", authenticateToken, authorizeRoles("creator"), LaunchController.updateLaunch);
+router.put("/:id", authenticateToken, canEditLaunch, LaunchController.updateLaunch);
 
 router.delete("/:id", authenticateToken, authorizeRoles("creator"), LaunchController.deleteLaunch);
 

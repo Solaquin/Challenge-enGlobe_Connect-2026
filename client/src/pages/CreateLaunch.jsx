@@ -1,5 +1,5 @@
 import Layout from "../components/layout/Layout";
-import LaunchForm from "../components/launch/LaunchForm";
+import LaunchForm from "../components/createLaunch/LaunchForm";
 
 function CreateLaunch() {
 

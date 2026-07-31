@@ -6,7 +6,11 @@ import {
     FiPlus
 } from "react-icons/fi";
 
+import { useAuth } from "../../context/AuthContext";
+
 function Sidebar() {
+
+    const { user } = useAuth();
 
     return (
 
@@ -32,36 +36,41 @@ function Sidebar() {
 
             {/* Botón */}
 
-            <div className="p-5">
+            {
+                user?.role === "creator" && (
+                    <div className="p-5">
 
-                <Link
-                    to="/dashboard/launches/new"
-                    className="
-                        w-full
-                        flex
-                        items-center
-                        justify-center
-                        gap-2
-                        rounded-xl
-                        bg-violet-600
-                        text-white
-                        py-3
-                        hover:bg-violet-700
-                        transition
-                    "
-                >
+                    <Link
+                        to="/dashboard/launches/new"
+                        className="
+                            w-full
+                            flex
+                            items-center
+                            justify-center
+                            gap-2
+                            rounded-xl
+                            bg-violet-600
+                            text-white
+                            py-3
+                            hover:bg-violet-700
+                            transition
+                        "
+                    >
 
                     <FiPlus />
 
-                    New Launch
+                        New Launch
 
-                </Link>
+                    </Link>
 
-            </div>
+                    </div>
+                )
+
+            }
 
             {/* Menú */}
 
-            <nav className="px-3 flex-1">
+            <nav className="px-3 flex-1 p-5">
 
                 <NavLink
                     to="/dashboard"
@@ -93,7 +102,7 @@ function Sidebar() {
                     }
                 >
 
-                    <FiCalendar />
+                <FiCalendar />
 
                     Calendar
 
