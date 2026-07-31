@@ -17,7 +17,6 @@ function EditLaunch() {
 
     const [launch, setLaunch] = useState(null);
     const [assets, setAssets] = useState([]);
-
     const [loading, setLoading] = useState(true);
 
     useEffect(() => {
@@ -37,17 +36,20 @@ function EditLaunch() {
                 AssetService.getAssets(id)
 
             ]);
-        
+
             setLaunch(launchData);
-        
             setAssets(assetsData.data);
-        }
-        catch (error) {
 
-            toast.error("Failed to load launch.");
+        } catch (error) {
 
-        }
-        finally {
+            console.error(error);
+
+            toast.error(
+                error.response?.data?.message ??
+                "Unable to load the launch."
+            );
+
+        } finally {
 
             setLoading(false);
 
@@ -55,41 +57,36 @@ function EditLaunch() {
 
     }
 
-    async function handleUpdate({
-
-        formData,
-        files
-
-    }) {
+    async function handleUpdate({ formData, files }) {
 
         try {
 
             await LaunchService.updateLaunch(
-
                 id,
                 formData
-
             );
 
             if (files.length > 0) {
 
                 await AssetService.uploadAssets(
-
                     id,
                     files
-
                 );
 
             }
 
-            toast.success("Launch updated.");
+            toast.success("Launch updated successfully.");
 
             navigate(`/dashboard/launches/${id}`);
 
-        }
-        catch {
+        } catch (error) {
 
-            toast.error("Failed to update launch.");
+            console.error(error);
+
+            toast.error(
+                error.response?.data?.message ??
+                "Unable to update the launch."
+            );
 
         }
 
@@ -101,7 +98,15 @@ function EditLaunch() {
 
             <Layout>
 
-                <p>Loading...</p>
+                <div className="flex items-center justify-center py-24">
+
+                    <p className="text-gray-500">
+
+                        Loading launch...
+
+                    </p>
+
+                </div>
 
             </Layout>
 
@@ -113,19 +118,7 @@ function EditLaunch() {
 
         <Layout>
 
-            <div className="max-w-4xl mx-auto">
-
-                <h1 className="text-4xl font-bold mb-2">
-
-                    Edit Launch
-
-                </h1>
-
-                <p className="text-gray-500 mb-8">
-
-                    Edit the information for the product launch.
-
-                </p>
+            <div className="mx-auto w-full max-w-5xl">
 
                 <LaunchForm
 
@@ -137,7 +130,9 @@ function EditLaunch() {
 
                     submitLabel="Save Changes"
 
-                    onCancel={() => navigate(`/dashboard/launches/${id}`)}
+                    onCancel={() =>
+                        navigate(`/dashboard/launches/${id}`)
+                    }
 
                 />
 

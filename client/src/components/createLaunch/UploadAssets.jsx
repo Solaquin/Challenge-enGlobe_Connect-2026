@@ -152,142 +152,215 @@ function UploadAssets({ existingAssets = [], setAssets, files, setFiles }) {
 
     return (
 
-        <div className="mt-8">
+    <div className="space-y-8">
 
-            <h3 className="font-semibold text-lg mb-4">
+        {/* Upload Zone */}
 
-                Assets
+        <label
+            onDrop={handleDrop}
+            onDragOver={(e) => e.preventDefault()}
+            className="
+                flex
+                flex-col
+                items-center
+                justify-center
+                rounded-2xl
+                border-2
+                border-dashed
+                border-gray-300
+                bg-gray-50
+                px-8
+                py-12
+                text-center
+                transition-all
+                duration-200
+                cursor-pointer
+                hover:border-violet-500
+                hover:bg-violet-50
+            "
+        >
 
-            </h3>
-
-            <label
-                onDrop={handleDrop}
-                onDragOver={(e) => e.preventDefault()}
+            <div
                 className="
                     flex
-                    flex-col
+                    h-16
+                    w-16
                     items-center
                     justify-center
-                    border-2
-                    border-dashed
-                    border-gray-300
-                    rounded-xl
-                    h-56
-                    cursor-pointer
-                    hover:border-violet-500
-                    transition
+                    rounded-2xl
+                    bg-violet-100
+                    text-violet-600
                 "
             >
 
-                <FiUploadCloud
-                    size={42}
-                    className="text-violet-500"
-                />
+                <FiUploadCloud className="text-3xl" />
 
-                <p className="mt-4 font-medium">
+            </div>
 
-                    Click to upload
+            <h3 className="mt-5 text-lg font-semibold text-gray-900">
 
-                </p>
+                Upload Assets
 
-                <p className="text-sm text-gray-500">
+            </h3>
 
-                    or drag and drop
+            <p className="mt-2 text-sm text-gray-500">
 
-                </p>
+                Drag & drop files here or click to browse.
 
-                <input
-                    type="file"
-                    multiple
-                    hidden
-                    onChange={handleChange}
-                />
+            </p>
 
-            </label>
+            <p className="mt-4 text-xs text-gray-400">
 
-            {
-                existingAssets.length > 0 && (
-                
-                    <div className="mt-6">
-    
-                        <h4 className="font-medium mb-3">
-                
-                            Existing Assets
-                
-                        </h4>
-                
-                        <div className="space-y-3">
-                
-                            {
-                                existingAssets.map(asset => (
-                                
-                                    <AssetItem
+                PNG • JPG • WEBP • MP4 • PDF • DOC • DOCX
 
-                                        key={asset.id}
+            </p>
 
-                                        asset={asset}
+            <p className="mt-1 text-xs text-gray-400">
 
-                                        onDelete={handleDeleteAsset}
+                Maximum file size: 20 MB
 
-                                    />
-                                ))
-                            }
+            </p>
 
-                        </div>
-                        
+            <input
+                type="file"
+                multiple
+                hidden
+                onChange={handleChange}
+            />
+
+        </label>
+
+        {/* Existing Assets */}
+
+        {existingAssets.length > 0 && (
+
+            <section>
+
+                <div className="mb-4 flex items-center justify-between">
+
+                    <h3 className="text-lg font-semibold text-gray-900">
+
+                        Existing Assets
+
+                    </h3>
+
+                    <span
+                        className="
+                            rounded-full
+                            bg-gray-100
+                            px-3
+                            py-1
+                            text-xs
+                            font-medium
+                            text-gray-600
+                        "
+                    >
+
+                        {existingAssets.length}
+
+                    </span>
+
+                </div>
+
+                <div className="space-y-3">
+
+                    {existingAssets.map(asset => (
+
+                        <AssetItem
+                            key={asset.id}
+                            asset={asset}
+                            onDelete={handleDeleteAsset}
+                        />
+
+                    ))}
+
+                </div>
+
+            </section>
+
+        )}
+
+        {/* Validation Errors */}
+
+        {fileErrors.length > 0 && (
+
+            <section className="space-y-2">
+
+                {fileErrors.map((error, index) => (
+
+                    <div
+                        key={index}
+                        className="
+                            rounded-xl
+                            border
+                            border-red-200
+                            bg-red-50
+                            px-4
+                            py-3
+                        "
+                    >
+
+                        <p className="text-sm">
+
+                            <span className="font-semibold text-red-700">
+
+                                {error.file}
+
+                            </span>
+
+                            <span className="text-red-600">
+
+                                {" — "}
+                                {error.message}
+
+                            </span>
+
+                        </p>
+
                     </div>
 
-                )
-            }
+                ))}
 
-            {
-                fileErrors.length > 0 && (
-                
-                    <div className="mt-4 space-y-2">
-                    
-                        {
-                        
-                            fileErrors.map((error, index) => (
-                            
-                                <div
-                                    key={index}
-                                    className="rounded-lg bg-red-50 border border-red-200 px-4 py-2"
-                                >
-                                
-                                    <span className="font-medium text-red-700">
-                            
-                                        {error.file}
-                            
-                                    </span>
-                            
-                                    <span className="text-red-600">
-                            
-                                        {" - "}
-                                        {error.message}
-                            
-                                    </span>
-                            
-                                </div>
+            </section>
 
-                            ))
-                        
-                        }
+        )}
 
-                    </div>
+        {/* Pending Uploads */}
 
-                )
-            }
+        {files.length > 0 && (
 
-            {
-                            
-                files.length > 0 && (
-                
-                <div className="mt-6 space-y-3">
-                
-                    {
-                    
-                    files.map((file,index)=>(
-                    
+            <section>
+
+                <div className="mb-4 flex items-center justify-between">
+
+                    <h3 className="text-lg font-semibold text-gray-900">
+
+                        Files to Upload
+
+                    </h3>
+
+                    <span
+                        className="
+                            rounded-full
+                            bg-violet-100
+                            px-3
+                            py-1
+                            text-xs
+                            font-medium
+                            text-violet-700
+                        "
+                    >
+
+                        {files.length}
+
+                    </span>
+
+                </div>
+
+                <div className="space-y-3">
+
+                    {files.map((file, index) => (
+
                         <UploadedFileItem
 
                             key={index}
@@ -297,21 +370,20 @@ function UploadAssets({ existingAssets = [], setAssets, files, setFiles }) {
                             onRemove={() =>
                                 setFiles(files.filter((_, i) => i !== index))
                             }
-                        
+
                         />
 
-                    ))
-                
-                    }
+                    ))}
 
                 </div>
 
-                )
-            }
+            </section>
 
-        </div>
+        )}
 
-    );
+    </div>
+
+);
 
 }
 

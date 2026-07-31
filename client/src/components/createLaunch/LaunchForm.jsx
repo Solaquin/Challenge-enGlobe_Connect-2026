@@ -1,13 +1,13 @@
 import { useState, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
 
 import FormField from "./FormField";
 import SelectField from "./SelectField";
 import TextAreaField from "./TextAreaField";
 import UploadAssets from "./UploadAssets";
+
 import { MARKETS } from "../../constants/markets";
 
-
+import { FiSave, FiX } from "react-icons/fi";
 
 function LaunchForm({
 
@@ -18,8 +18,6 @@ function LaunchForm({
     onCancel
 
 }) {
-
-    const navigate = useNavigate();
 
     const defaultValues = {
 
@@ -32,6 +30,14 @@ function LaunchForm({
     };
 
     const [formData, setFormData] = useState(defaultValues);
+
+    const [existingAssets, setExistingAssets] = useState(initialAssets || []);
+
+    const [files, setFiles] = useState([]);
+
+    const [errors, setErrors] = useState({});
+
+    const [loading, setLoading] = useState(false);
 
     useEffect(() => {
 
@@ -53,46 +59,27 @@ function LaunchForm({
 
     }, [initialValues]);
 
-    const [existingAssets, setExistingAssets] = useState(initialAssets || []);
-
-    const [files, setFiles] = useState([]);
-
-    const [errors, setErrors] = useState({});
-
-    const [loading, setLoading] = useState(false);
-
     function handleChange(e) {
 
-        setFormData({
+        const { name, value } = e.target;
 
-            ...formData,
+        setFormData(prev => ({
 
-            [e.target.name]: e.target.value
+            ...prev,
 
-        });
+            [name]: value
 
-    }
+        }));
 
-    async function handleSubmit(e) {
+        if (errors[name]) {
 
-        e.preventDefault();
+            setErrors(prev => ({
 
-        if (!validate()) return;
+                ...prev,
 
-        try {
-            setLoading(true);
+                [name]: ""
 
-            await onSubmit({
-
-                formData,
-                files
-
-            });
-
-        }
-        finally {
-
-            setLoading(false);
+            }));
 
         }
 
@@ -117,6 +104,7 @@ function LaunchForm({
         if (!formData.market) {
 
             newErrors.market = "Please select a target market.";
+
         }
 
         setErrors(newErrors);
@@ -125,123 +113,248 @@ function LaunchForm({
 
     }
 
+    async function handleSubmit(e) {
+
+        e.preventDefault();
+
+        if (!validate()) return;
+
+        try {
+
+            setLoading(true);
+
+            await onSubmit({
+
+                formData,
+                files
+
+            });
+
+        }
+
+        finally {
+
+            setLoading(false);
+
+        }
+
+    }
+
     return (
 
-        <form onSubmit={handleSubmit} className="max-w-3xl mx-auto py-8 px-5 bg-white rounded-2xl shadow p-8">
+        <form
+            onSubmit={handleSubmit}
+            className="
+                mx-auto
+                max-w-4xl
+                rounded-2xl
+                border
+                border-gray-200
+                bg-white
+                p-8
+            "
+        >
 
-            <div className="grid grid-cols-2 gap-6">
+            {/* Launch Information */}
 
-                <FormField
+            <section>
 
-                    label="Campaign Name"
+                <h2 className="text-lg font-semibold text-gray-900">
 
-                    name="title"
+                    Launch Information
 
-                    value={formData.title}
+                </h2>
 
-                    onChange={handleChange}
+                <p className="mt-1 text-sm text-gray-500">
 
-                    placeholder="e.g. Summer Collection"
+                    Enter the basic information for this product launch.
 
-                    error={errors.title}
+                </p>
 
-                />
+                <div className="mt-8 grid grid-cols-1 gap-6 md:grid-cols-2">
 
-                <FormField
+                    <FormField
 
-                    type="date"
+                        label="Campaign Name"
 
-                    label="Target Launch Date"
+                        name="title"
 
-                    name="release_date"
+                        value={formData.title}
 
-                    value={formData.release_date}
+                        onChange={handleChange}
 
-                    onChange={handleChange}
+                        placeholder="e.g. Summer Collection"
 
-                    error={errors.release_date}
+                        error={errors.title}
 
-                />
-            </div>
+                    />
 
-            <div className="mt-5">
-                <SelectField
-                    label="Target Market"
-                    name="market"
-                    value={formData.market}
-                    onChange={handleChange}
-                    options={MARKETS}
-                    placeholder="Select a market"
-                    error={errors.market}
-                />
-            </div>
+                    <FormField
 
-            <div className="mt-5">
-                <TextAreaField
-                    label="Description"
-                    name="description"
-                    value={formData.description}
-                    onChange={handleChange}
-                    placeholder="Describe the product launch..."
-                    rows={5}
-                    error={errors.description}
-                />
-            </div>
-            <div className="mt-8">
-                <UploadAssets
-                    existingAssets={existingAssets}
+                        type="date"
 
-                    setAssets={setExistingAssets}
+                        label="Target Launch Date"
 
-                    files={files}
+                        name="release_date"
 
-                    setFiles={setFiles}
+                        value={formData.release_date}
 
-                />
+                        onChange={handleChange}
 
-            </div>
+                        error={errors.release_date}
 
-            <div className="flex justify-end gap-4 mt-10">
+                    />
+
+                </div>
+
+                <div className="mt-6">
+
+                    <SelectField
+
+                        label="Target Market"
+
+                        name="market"
+
+                        value={formData.market}
+
+                        onChange={handleChange}
+
+                        options={MARKETS}
+
+                        placeholder="Select a market"
+
+                        error={errors.market}
+
+                    />
+
+                </div>
+
+                <div className="mt-6">
+
+                    <TextAreaField
+
+                        label="Description"
+
+                        name="description"
+
+                        value={formData.description}
+
+                        onChange={handleChange}
+
+                        placeholder="Describe the product launch..."
+
+                        rows={5}
+
+                        error={errors.description}
+
+                    />
+
+                </div>
+
+            </section>
+
+            {/* Assets */}
+
+            <section className="mt-10 border-t border-gray-200 pt-10">
+
+                <h2 className="text-lg font-semibold text-gray-900">
+
+                    Assets
+
+                </h2>
+
+                <p className="mt-1 text-sm text-gray-500">
+
+                    Upload promotional images and supporting documents.
+
+                </p>
+
+                <div className="mt-6">
+
+                    <UploadAssets
+
+                        existingAssets={existingAssets}
+
+                        setAssets={setExistingAssets}
+
+                        files={files}
+
+                        setFiles={setFiles}
+
+                    />
+
+                </div>
+
+            </section>
+
+            {/* Actions */}
+
+            <div className="mt-10 flex justify-end gap-4 border-t border-gray-200 pt-8">
 
                 <button
+
                     type="button"
+
                     onClick={onCancel}
+
                     className="
-                        px-6
-                        py-3
+                        inline-flex
+                        items-center
+                        gap-2
                         rounded-xl
                         border
-                        hover:bg-gray-100
-                        outline-none
+                        border-gray-300
+                        px-6
+                        py-3
+                        font-medium
+                        text-gray-700
+                        transition-all
+                        hover:bg-gray-50
+                        hover:border-gray-400
                         cursor-pointer
                     "
+
                 >
+
+                    <FiX />
+
                     Cancel
+
                 </button>
 
                 <button
+
                     type="submit"
+
                     disabled={loading}
+
                     className="
-                        px-6
-                        py-3
+                        inline-flex
+                        items-center
+                        gap-2
                         rounded-xl
                         bg-violet-600
+                        px-6
+                        py-3
+                        font-medium
                         text-white
-                        hover:bg-violet-800
-                        disabled:opacity-50
+                        transition-colors
+                        hover:bg-violet-700
+                        disabled:cursor-not-allowed
+                        disabled:opacity-60
                         cursor-pointer
                     "
+
                 >
-                
-                    {
-                        loading ? "Saving..." : submitLabel
-                    }
+
+                    <FiSave />
+
+                    {loading ? "Saving..." : submitLabel}
 
                 </button>
-                
+
             </div>
-                
+
         </form>
 
     );
