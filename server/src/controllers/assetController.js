@@ -12,9 +12,9 @@ export function uploadAsset(req, res) {
 
         if (!launch) {
 
-            if (req.file) {
+            if (req.files) {
 
-                fs.removeSync(req.file.path);
+                req.files.forEach(file => fs.removeSync(file.path));
 
             }
 
@@ -25,37 +25,48 @@ export function uploadAsset(req, res) {
 
         }
 
-        if (!req.file) {
+        console.log("req.file:", req.file);
+        console.log("req.files:", req.files);
+
+        if (!req.files || req.files.length === 0) {
 
             return res.status(400).json({
                 success: false,
-                message: "No file uploaded"
+                message: "No files uploaded"
             });
 
         }
 
-        let fileType = "document";
+        const assetIds = [];
 
-        if (req.file.mimetype.startsWith("image/")) {
+        req.files.forEach(file => {
 
-            fileType = "image";
+            let fileType = "document";
 
-        } else if (req.file.mimetype.startsWith("video/")) {
+            if (file.mimetype.startsWith("image/")) {
 
-            fileType = "video";
+                fileType = "image";
 
-        }
+            } else if (file.mimetype.startsWith("video/")) {
 
-        const assetId = AssetModel.createAsset({
+                fileType = "video";
 
-            launch_id: launchId,
-            original_name: req.file.originalname,
-            file_name: req.file.filename,
-            mime_type: req.file.mimetype,
-            file_type: fileType,
-            file_size: req.file.size,
-            file_path: req.file.path.replace(/\\/g, "/"),
-            uploaded_by: req.user.id
+            }
+
+            const assetId = AssetModel.createAsset({
+
+                launch_id: launchId,
+                original_name: file.originalname,
+                file_name: file.filename,
+                mime_type: file.mimetype,
+                file_type: fileType,
+                file_size: file.size,
+                file_path: file.path.replace(/\\/g, "/"),
+                uploaded_by: req.user.id
+
+            });
+
+            assetIds.push(assetId);
 
         });
 
@@ -67,7 +78,7 @@ export function uploadAsset(req, res) {
 
             data: {
 
-                id: assetId
+                ids: assetIds
 
             }
 

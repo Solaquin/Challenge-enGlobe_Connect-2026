@@ -1,6 +1,7 @@
 import { useState } from "react";
 
 import LaunchService from "../../services/launchService";
+import AssetService from "../../services/assetsService";
 import { useNavigate } from "react-router-dom";
 
 import FormField from "./FormField";
@@ -8,6 +9,8 @@ import SelectField from "./SelectField";
 import TextAreaField from "./TextAreaField";
 import UploadAssets from "./UploadAssets";
 import { MARKETS } from "../../constants/markets";
+
+import toast from "react-hot-toast";
 
 
 function LaunchForm() {
@@ -52,15 +55,38 @@ function LaunchForm() {
 
         try {
 
-            await LaunchService.createLaunch(formData);
+            setLoading(true);
+
+            const response = await LaunchService.createLaunch(formData);
+
+            const launchId = response.id;
+
+            if (files.length > 0) {
+
+                await AssetService.uploadAssets(
+                    launchId,
+                    files
+                );
+
+            }
+
+            toast.success("Launch created successfully.");
 
             navigate("/dashboard");
 
         } catch (error) {
 
-            console.error("Failed to create launch:", error);
+            toast.error(
+                error.response?.data?.message ??
+                "Something went wrong."
+            );
 
         }
+        finally {
+
+            setLoading(false);
+
+        }   
     }
 
     function validate() {
@@ -92,7 +118,7 @@ function LaunchForm() {
 
     return (
 
-        <div className="max-w-3xl mx-auto py-8 px-5 bg-white rounded-2xl shadow p-8">
+        <form onSubmit={handleSubmit} className="max-w-3xl mx-auto py-8 px-5 bg-white rounded-2xl shadow p-8">
 
             <div className="grid grid-cols-2 gap-6">
 
@@ -210,7 +236,7 @@ function LaunchForm() {
                 
             </div>
                 
-        </div>
+        </form>
 
     );
 

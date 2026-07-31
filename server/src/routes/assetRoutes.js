@@ -18,7 +18,7 @@ router.post(
 
     authorizeRoles("creator"),
 
-    upload.single("file"),
+    upload.array("assets"),
 
     AssetController.uploadAsset
 
