@@ -1,15 +1,27 @@
 import InfoField from "./InfoField";
 
+import { parseLocalDate } from "../../utils/calendarUtils";
+
 function formatDate(date) {
 
     if (!date) return "-";
 
-    return new Date(date).toLocaleDateString(undefined, {
+    // Fecha simple: YYYY-MM-DD
+    if (/^\d{4}-\d{2}-\d{2}$/.test(date)) {
 
+        return parseLocalDate(date).toLocaleDateString(undefined, {
+            year: "numeric",
+            month: "long",
+            day: "numeric"
+        });
+
+    }
+
+    // Fecha con hora (ISO o timestamp SQL)
+    return new Date(date).toLocaleDateString(undefined, {
         year: "numeric",
         month: "long",
         day: "numeric"
-
     });
 
 }
@@ -18,11 +30,18 @@ export default function LaunchInfoCard({ launch }) {
 
     return (
 
-        <div className="bg-white rounded-lg shadow-md">
+        <div
+            className="
+                rounded-2xl
+                border
+                border-gray-200
+                bg-white
+            "
+        >
 
-            <div className="border-b px-6 py-4">
+            <div className="border-b border-gray-200 px-8 py-5">
 
-                <h2 className="text-lg font-semibold">
+                <h2 className="text-xl font-semibold text-gray-900">
 
                     Launch Information
 
@@ -30,47 +49,65 @@ export default function LaunchInfoCard({ launch }) {
 
             </div>
 
-            <div className="p-6 space-y-8">
+            <div className="space-y-8 p-8">
 
-                <div>
+                <section>
 
-                    <h3 className="text-sm font-medium text-gray-500 mb-2">
+                    <h3 className="mb-3 text-sm font-medium text-gray-500">
 
                         Description
 
                     </h3>
 
-                    <p className="text-gray-700 whitespace-pre-wrap">
+                    <div
+                        className="
+                            rounded-xl
+                            border
+                            border-gray-200
+                            bg-gray-50
+                            p-5
+                        "
+                    >
 
-                        {launch.description || "No description provided."}
+                        <p className="whitespace-pre-wrap leading-7 text-gray-700">
 
-                    </p>
+                            {launch.description?.trim()
+                                ? launch.description
+                                : "No description provided."}
 
-                </div>
+                        </p>
 
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    </div>
 
-                    <InfoField
-                        label="Market"
-                        value={launch.market}
-                    />
+                </section>
 
-                    <InfoField
-                        label="Release Date"
-                        value={formatDate(launch.release_date)}
-                    />
+                <section>
 
-                    <InfoField
-                        label="Created At"
-                        value={formatDate(launch.created_at)}
-                    />
+                    <div className="grid grid-cols-1 gap-5 md:grid-cols-2">
 
-                    <InfoField
-                        label="Updated At"
-                        value={formatDate(launch.updated_at)}
-                    />
+                        <InfoField
+                            label="Market"
+                            value={launch.market}
+                        />
 
-                </div>
+                        <InfoField
+                            label="Release Date"
+                            value={formatDate(launch.release_date)}
+                        />
+
+                        <InfoField
+                            label="Created At"
+                            value={formatDate(launch.created_at)}
+                        />
+
+                        <InfoField
+                            label="Updated At"
+                            value={formatDate(launch.updated_at)}
+                        />
+
+                    </div>
+
+                </section>
 
             </div>
 

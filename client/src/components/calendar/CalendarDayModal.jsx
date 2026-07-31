@@ -1,5 +1,8 @@
+import { FiX } from "react-icons/fi";
 import { useNavigate } from "react-router-dom";
+
 import "./Calendar.css";
+
 import { LAUNCH_STATUS } from "../../constants/launchStatusColors";
 
 export default function CalendarDayModal({
@@ -13,35 +16,91 @@ export default function CalendarDayModal({
 
     const navigate = useNavigate();
 
-    if (!open) return null;
+    if (!open) {
+
+        return null;
+
+    }
+
+    function handleLaunchClick(id) {
+
+        navigate(`/dashboard/launches/${id}`);
+
+        onClose();
+
+    }
 
     return (
 
-        <div className="calendar-modal-overlay" onClick={onClose}>
+        <div
+
+            className="calendar-modal-overlay"
+
+            onClick={onClose}
+
+        >
 
             <div
+
                 className="calendar-modal"
+
                 onClick={(e) => e.stopPropagation()}
+
             >
 
                 <div className="calendar-modal-header">
 
-                    <h3>
+                    <div>
 
-                        {date.toLocaleDateString("en-US", {
+                        <h2 className="text-xl font-semibold text-gray-900">
 
-                            weekday: "long",
-                            month: "long",
-                            day: "numeric",
-                            year: "numeric"
+                            {date.toLocaleDateString("en-US", {
 
-                        })}
+                                weekday: "long",
+                                month: "long",
+                                day: "numeric",
+                                year: "numeric"
 
-                    </h3>
+                            })}
 
-                    <button onClick={onClose}>
+                        </h2>
 
-                        ✕
+                        <p className="mt-1 text-sm text-gray-500">
+
+                            {launches.length} launch{launches.length !== 1 ? "es" : ""}
+
+                        </p>
+
+                    </div>
+
+                    <button
+
+                        type="button"
+
+                        onClick={onClose}
+
+                        className="
+                            flex
+                            h-10
+                            w-10
+                            items-center
+                            justify-center
+                            rounded-lg
+                            border
+                            border-gray-200
+                            bg-white
+                            text-gray-500
+                            transition-all
+                            duration-200
+                            hover:bg-gray-50
+                            hover:text-gray-700
+                        "
+
+                        aria-label="Close"
+
+                    >
+
+                        <FiX />
 
                     </button>
 
@@ -49,70 +108,113 @@ export default function CalendarDayModal({
 
                 <div className="calendar-modal-body">
 
-                    {launches.map(launch => {
+                    {launches.length === 0 ? (
 
-                        const statusStyle = LAUNCH_STATUS[launch.status];
-
-                        return(
                         <div
-
-                            key={launch.id}
-
-                            className="calendar-modal-item"
-
-                            onClick={() =>
-                                navigate(`/dashboard/launches/${launch.id}`)
-                            }
-
+                            className="
+                                py-10
+                                text-center
+                                text-gray-500
+                            "
                         >
 
-                            <span
+                            No launches scheduled.
 
-                                className="status-dot"
+                        </div>
 
-                                style={{
-                                    background: statusStyle.color
-                                }}
+                    ) : (
 
-                            />
+                        launches.map((launch) => {
 
-                            <div className="calendar-modal-info">
+                            const statusStyle =
 
-                                <strong>
+                                LAUNCH_STATUS[launch.status];
 
-                                    {launch.title}
+                            return (
 
-                                </strong>
+                                <button
 
-                                <span>
+                                    key={launch.id}
 
-                                    {launch.market}
+                                    type="button"
 
-                                </span>
+                                    className="calendar-modal-item"
 
-                            </div>
+                                    onClick={() =>
 
-                            <span
+                                        handleLaunchClick(
 
-                                className="upcoming-status"
+                                            launch.id
 
-                                style={{
-                                
-                                    background: statusStyle.bg,
-                                    color: statusStyle.color,
-                                    border: `1px solid ${statusStyle.border}`
-                                
-                                }}
-                            
-                            >
-                            
-                                {statusStyle.label}
-                            
-                            </span>
+                                        )
 
-                        </div>)
+                                    }
 
-                    })}
+                                >
+
+                                    <span
+
+                                        className="status-dot"
+
+                                        style={{
+
+                                            background:
+
+                                                statusStyle.color
+
+                                        }}
+
+                                    />
+
+                                    <div className="calendar-modal-info">
+
+                                        <strong>
+
+                                            {launch.title}
+
+                                        </strong>
+
+                                        <span>
+
+                                            {launch.market}
+
+                                        </span>
+
+                                    </div>
+
+                                    <span
+
+                                        className="upcoming-status"
+
+                                        style={{
+
+                                            background:
+
+                                                statusStyle.bg,
+
+                                            color:
+
+                                                statusStyle.color,
+
+                                            border:
+
+                                                `1px solid ${statusStyle.border}`
+
+                                        }}
+
+                                    >
+
+                                        {statusStyle.label}
+
+                                    </span>
+
+                                </button>
+
+                            );
+
+                        })
+
+                    )}
 
                 </div>
 

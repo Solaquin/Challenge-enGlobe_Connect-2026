@@ -10,14 +10,35 @@ export default function ActionButton({
 
     const variants = {
 
-        primary:
-            "bg-blue-600 hover:bg-blue-700 text-white",
+        primary: `
+            border
+            border-violet-200
+            bg-violet-50
+            text-violet-700
+            hover:bg-violet-200
+            hover:border-violet-400
+            cursor-pointer
+        `,
 
-        success:
-            "bg-green-600 hover:bg-green-700 text-white",
+        success: `
+            border
+            border-green-200
+            bg-green-50
+            text-green-700
+            hover:bg-green-200
+            hover:border-green-400
+            cursor-pointer
+        `,
 
-        danger:
-            "bg-red-600 hover:bg-red-700 text-white"
+        danger: `
+            border
+            border-red-200
+            bg-red-50
+            text-red-700
+            hover:bg-red-200
+            hover:border-red-400
+            cursor-pointer
+        `
 
     };
 
@@ -25,32 +46,38 @@ export default function ActionButton({
 
         <button
 
+            type="button"
+
             onClick={onClick}
 
             disabled={disabled}
 
             className={`
-                w-full
                 flex
+                w-full
                 items-center
                 justify-center
                 gap-2
-                rounded-lg
+                rounded-xl
                 px-4
-                py-2.5
+                py-3
                 font-medium
-                transition-colors
-                cursor-pointer
+                transition-all
+                duration-200
 
                 ${variants[variant]}
 
-                disabled:opacity-50
                 disabled:cursor-not-allowed
+                disabled:opacity-50
             `}
 
         >
 
-            {icon}
+            <span className="text-lg">
+
+                {icon}
+
+            </span>
 
             <span>
 

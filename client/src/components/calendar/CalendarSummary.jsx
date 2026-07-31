@@ -1,71 +1,155 @@
+import { useMemo } from "react";
+import { FiPieChart } from "react-icons/fi";
+
 import { LAUNCH_STATUS } from "../../constants/launchStatusColors";
 
 export default function CalendarSummary({ launches }) {
 
-    const counts = {
+    const items = useMemo(() => {
 
-        draft: launches.filter(l => l.status === "draft").length,
-        review: launches.filter(l => l.status === "review").length,
-        approved: launches.filter(l => l.status === "approved").length,
-        published: launches.filter(l => l.status === "published").length
+        const counts = launches.reduce((acc, launch) => {
 
-    };
+            acc[launch.status] = (acc[launch.status] ?? 0) + 1;
 
-    const items = [
+            return acc;
 
-        {
-            label: "Total",
-            value: launches.length,
-            color: "#A855F7"
-        },
+        }, {});
 
-        ...Object.entries(counts).map(([status, value]) => ({
-            label: LAUNCH_STATUS[status].label,
-            value,
-            color: LAUNCH_STATUS[status].color
-        }))
+        return [
 
-    ];
+            {
+                label: "Total",
+                value: launches.length,
+                color: "#8B5CF6"
+            },
+
+            ...Object.entries(LAUNCH_STATUS).map(([status, config]) => ({
+
+                label: config.label,
+
+                value: counts[status] ?? 0,
+
+                color: config.color
+
+            }))
+
+        ];
+
+    }, [launches]);
 
     return (
 
         <div className="calendar-card">
 
-            <h3 class="font-bold">Monthly Summary</h3>
+            <div className="calendar-card-header">
+
+                <div className="calendar-card-title">
+
+                    <FiPieChart className="calendar-card-icon" />
+
+                    <h3>Monthly Summary</h3>
+
+                </div>
+
+                <span className="calendar-card-count">
+
+                    {launches.length}
+
+                </span>
+
+            </div>
 
             <div className="summary-list">
 
-                {items.map(item => (
+                {items.map((item) => {
 
-                    <div
-                        key={item.label}
-                        className="summary-item"
-                    >
+                    const percentage =
 
-                        <div className="summary-left">
+                        launches.length === 0
 
-                            <span
-                                className="summary-dot"
+                            ? 0
+
+                            : Math.round(
+
+                                  (item.value / launches.length) * 100
+
+                              );
+
+                    return (
+
+                        <div
+
+                            key={item.label}
+
+                            className="
+                                summary-item
+                                rounded-xl
+                                border
+                                border-gray-200
+                                bg-gray-50
+                                px-4
+                                py-3
+                            "
+
+                        >
+
+                            <div className="summary-left">
+
+                                <span
+
+                                    className="summary-dot"
+
+                                    style={{
+
+                                        background: item.color
+
+                                    }}
+
+                                />
+
+                                <div>
+
+                                    <p className="font-medium text-gray-800">
+
+                                        {item.label}
+
+                                    </p>
+
+                                    {item.label !== "Total" && (
+
+                                        <p className="text-xs text-gray-500">
+
+                                            {percentage}%
+
+                                        </p>
+
+                                    )}
+
+                                </div>
+
+                            </div>
+
+                            <strong
+
                                 style={{
-                                    background: item.color
-                                }}
-                            />
 
-                            <span>{item.label}</span>
+                                    color: item.color
+
+                                }}
+
+                                className="text-xl"
+
+                            >
+
+                                {item.value}
+
+                            </strong>
 
                         </div>
 
-                        <strong
-                            style={{
-                                color: item.color
-                            }}
-                        >
-                            {item.value}
-                        </strong>
+                    );
 
-                    </div>
-
-                ))}
+                })}
 
             </div>
 

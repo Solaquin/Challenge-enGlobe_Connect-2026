@@ -1,5 +1,10 @@
+import { useMemo } from "react";
+import { FiCalendar } from "react-icons/fi";
+
 import UpcomingEventCard from "./UpcomingEventCard";
 import { parseLocalDate } from "../../utils/calendarUtils";
+
+const MAX_UPCOMING_EVENTS = 5;
 
 export default function UpcomingEvents({
 
@@ -7,53 +12,106 @@ export default function UpcomingEvents({
 
 }) {
 
-    const today = new Date();
-    today.setHours(0, 0, 0, 0);
+    const upcoming = useMemo(() => {
 
-    const upcoming = launches
-        .filter(launch => parseLocalDate(launch.release_date) >= today)
-        .sort(
-            (a, b) =>
-                parseLocalDate(a.release_date) -
-                parseLocalDate(b.release_date)
-        )
-        .slice(0, 5);
+        const today = new Date();
+
+        today.setHours(0, 0, 0, 0);
+
+        return launches
+
+            .map((launch) => ({
+
+                ...launch,
+
+                parsedDate: parseLocalDate(
+
+                    launch.release_date
+
+                )
+
+            }))
+
+            .filter(
+
+                (launch) =>
+
+                    launch.parsedDate >= today
+
+            )
+
+            .sort(
+
+                (a, b) =>
+
+                    a.parsedDate - b.parsedDate
+
+            )
+
+            .slice(
+
+                0,
+
+                MAX_UPCOMING_EVENTS
+
+            );
+
+    }, [launches]);
 
     return (
 
         <div className="calendar-card">
 
-            <h3 class= "font-bold">
+            <div className="calendar-card-header">
 
-                Upcoming Events
-
-            </h3>
+                <div className="calendar-card-title">
+                
+                    <FiCalendar className="calendar-card-icon" />
+                
+                    <h3>Upcoming Events</h3>
+                
+                </div>
+                
+                <span className="calendar-card-count">
+                
+                    {upcoming.length}
+                
+                </span>
+                
+            </div>
 
             {
 
-                upcoming.length === 0
+                upcoming.length === 0 ? (
 
-                    ? (
+                    <div
+                        className="
+                            py-8
+                            text-center
+                            text-sm
+                            text-gray-500
+                        "
+                    >
 
-                        <p>No upcoming launches.</p>
+                        No upcoming launches.
 
-                    )
+                    </div>
 
-                    : (
+                ) : (
 
-                        upcoming.map(launch => (
+                    upcoming.map((launch) => (
 
-                            <UpcomingEventCard
+                        <UpcomingEventCard
 
-                                key={launch.id}
+                            key={launch.id}
 
-                                launch={launch}
+                            launch={launch}
 
-                            />
+                        />
 
-                        ))
+                    ))
 
-                    )
+                )
 
             }
 

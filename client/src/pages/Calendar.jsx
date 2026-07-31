@@ -1,29 +1,46 @@
-import { useState, useEffect } from "react";
-import "../components/calendar/Calendar.css"
+import { useEffect, useMemo, useState } from "react";
+import { toast } from "react-hot-toast";
+
+import "../components/calendar/Calendar.css";
+
 import { MARKETS } from "../constants/markets";
 
-import CalendarGrid from "../components/calendar/CalendarGrid";
 import Layout from "../components/layout/Layout";
-import LaunchService from "../services/launchService";
-
+import CalendarGrid from "../components/calendar/CalendarGrid";
 import CalendarToolbar from "../components/calendar/CalendarToolbar";
 import UpcomingEvents from "../components/calendar/UpcomingEvents";
 import CalendarSummary from "../components/calendar/CalendarSummary";
 
+import LaunchService from "../services/launchService";
+
+import { parseLocalDate } from "../utils/calendarUtils";
+
 export default function CalendarPage() {
 
     const [currentDate, setCurrentDate] = useState(new Date());
-    
+
     const [launches, setLaunches] = useState([]);
 
     const [market, setMarket] = useState("");
+
     const [status, setStatus] = useState("");
+
+    const [loading, setLoading] = useState(false);
 
     useEffect(() => {
 
-        async function loadLaunches() {
+        loadLaunches();
+
+    }, [currentDate, market, status]);
+
+    async function loadLaunches() {
+
+        try {
+
+            setLoading(true);
 
             const month = currentDate.getMonth() + 1;
+
             const year = currentDate.getFullYear();
 
             const response = await LaunchService.getLaunches({
@@ -38,23 +55,63 @@ export default function CalendarPage() {
             setLaunches(response.data);
 
         }
+        catch (error) {
 
-        loadLaunches();
+            console.error(error);
 
-    }, [currentDate, market, status]);
+            toast.error(
 
-    const monthLaunches = launches.filter((launch) => {
+                error.response?.data?.message ||
 
-        const releaseDate = new Date(launch.release_date);
+                "Failed to load launches."
 
-        return (
+            );
 
-            releaseDate.getMonth() === currentDate.getMonth() &&
-            releaseDate.getFullYear() === currentDate.getFullYear()
+        }
+        finally {
+
+            setLoading(false);
+
+        }
+
+    }
+
+    function changeMonth(offset) {
+
+        setCurrentDate(
+
+            new Date(
+
+                currentDate.getFullYear(),
+
+                currentDate.getMonth() + offset,
+
+                1
+
+            )
 
         );
 
-    });
+    }
+
+    const monthLaunches = useMemo(() => {
+
+        return launches.filter((launch) => {
+
+            const releaseDate = parseLocalDate(
+                launch.release_date
+            );
+
+            return (
+
+                releaseDate.getMonth() === currentDate.getMonth() &&
+                releaseDate.getFullYear() === currentDate.getFullYear()
+
+            );
+
+        });
+
+    }, [launches, currentDate]);
 
     return (
 
@@ -68,54 +125,61 @@ export default function CalendarPage() {
 
                         currentDate={currentDate}
 
-                        onPrevious={() =>
-                            setCurrentDate(
-                            
-                                new Date(
-                                
-                                    currentDate.getFullYear(),
-                                    currentDate.getMonth() - 1,
-                                    1
-                                
-                                )
-                            
-                            )
-                        }
-                    
-                        onNext={() =>
-                            setCurrentDate(
-                            
-                                new Date(
-                                
-                                    currentDate.getFullYear(),
-                                    currentDate.getMonth() + 1,
-                                    1
-                                
-                                )
-                            
-                            )
-                        }
-                    
+                        onPrevious={() => changeMonth(-1)}
+
+                        onNext={() => changeMonth(1)}
+
                         market={market}
-                    
+
                         status={status}
-                    
+
                         onMarketChange={(e) =>
+
                             setMarket(e.target.value)
+
                         }
-                    
+
                         onStatusChange={(e) =>
+
                             setStatus(e.target.value)
+
                         }
-                    
+
                         markets={MARKETS}
-                    
+
                     />
 
-                    <CalendarGrid
-                        currentDate={currentDate}
-                        launches={monthLaunches}
-                    />
+                    {loading ? (
+
+                        <div
+                            className="
+                                flex
+                                h-[600px]
+                                items-center
+                                justify-center
+                                rounded-2xl
+                                border
+                                border-gray-200
+                                bg-white
+                                text-gray-500
+                            "
+                        >
+
+                            Loading calendar...
+
+                        </div>
+
+                    ) : (
+
+                        <CalendarGrid
+
+                            currentDate={currentDate}
+
+                            launches={monthLaunches}
+
+                        />
+
+                    )}
 
                 </main>
 
@@ -124,7 +188,7 @@ export default function CalendarPage() {
                     <UpcomingEvents
 
                         launches={monthLaunches}
-                        
+
                     />
 
                     <CalendarSummary

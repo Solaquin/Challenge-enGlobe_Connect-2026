@@ -1,4 +1,7 @@
 import { useNavigate } from "react-router-dom";
+
+import StatusBadge from "../dashboard/StatusBadge";
+
 import { LAUNCH_STATUS } from "../../constants/launchStatusColors";
 import { parseLocalDate } from "../../utils/calendarUtils";
 
@@ -12,15 +15,21 @@ export default function UpcomingEventCard({
 
     const statusStyle = LAUNCH_STATUS[launch.status];
 
+    function handleClick() {
+
+        navigate(`/dashboard/launches/${launch.id}`);
+
+    }
+
     return (
 
-        <div
+        <button
+
+            type="button"
 
             className="upcoming-card"
 
-            onClick={() =>
-                navigate(`/dashboard/launches/${launch.id}`)
-            }
+            onClick={handleClick}
 
         >
 
@@ -41,31 +50,31 @@ export default function UpcomingEventCard({
 
                 <span>
 
-                    {
+                    {parseLocalDate(
 
-                        parseLocalDate(launch.release_date).toLocaleDateString()
-                        
+                        launch.release_date
 
-                    }
+                    ).toLocaleDateString(undefined, {
+
+                        month: "short",
+
+                        day: "numeric",
+
+                        year: "numeric"
+
+                    })}
 
                 </span>
 
             </div>
 
-            <span
-                className="upcoming-status"
-                style={{
-                    background: statusStyle.bg,
-                    color: statusStyle.color,
-                    border: `1px solid ${statusStyle.border}`
-                }}
-            >
+            <StatusBadge
 
-                {statusStyle.label}
+                status={launch.status}
 
-            </span>
+            />
 
-        </div>
+        </button>
 
     );
 

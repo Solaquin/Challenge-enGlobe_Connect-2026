@@ -42,7 +42,7 @@ function StatsSection({ stats }) {
 
         {
             title: "Pending",
-            value: stats?.pending ?? 0,
+            value: stats?.review ?? 0,
             subtitle: "Waiting Review",
             icon: FiClock,
             accent: "text-amber-600",

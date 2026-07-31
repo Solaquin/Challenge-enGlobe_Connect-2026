@@ -1,3 +1,11 @@
+import {
+    FiChevronLeft,
+    FiChevronRight,
+    FiFilter
+} from "react-icons/fi";
+
+import { LAUNCH_STATUS } from "../../constants/launchStatusColors";
+
 import "./Calendar.css";
 
 export default function CalendarToolbar({
@@ -22,8 +30,18 @@ export default function CalendarToolbar({
 
             <div className="calendar-navigation">
 
-                <button onClick={onPrevious}>
-                    ←
+                <button
+
+                    type="button"
+
+                    onClick={onPrevious}
+
+                    aria-label="Previous month"
+
+                >
+
+                    <FiChevronLeft />
+
                 </button>
 
                 <h2>
@@ -37,65 +55,103 @@ export default function CalendarToolbar({
 
                 </h2>
 
-                <button onClick={onNext}>
-                    →
+                <button
+
+                    type="button"
+
+                    onClick={onNext}
+
+                    aria-label="Next month"
+
+                >
+
+                    <FiChevronRight />
+
                 </button>
 
             </div>
 
             <div className="calendar-filters">
 
-                <select
-                    value={market}
-                    onChange={onMarketChange}
-                >
+                <div className="calendar-filter-group">
 
-                    <option value="">
-                        All Markets
-                    </option>
+                    <FiFilter className="calendar-filter-icon" />
 
-                    {
-                    markets.map(market => (
+                    <select
 
-                        <option
-                            key={market.value}
-                            value={market.value}
-                        >
+                        value={market}
 
-                            {market.label}
+                        onChange={onMarketChange}
+
+                    >
+
+                        <option value="">
+
+                            All Markets
 
                         </option>
 
-                    ))}
+                        {markets.map((market) => (
 
-                </select>
+                            <option
 
-                <select
-                    value={status}
-                    onChange={onStatusChange}
-                >
+                                key={market.value}
 
-                    <option value="">
-                        All Status
-                    </option>
+                                value={market.value}
 
-                    <option value="draft">
-                        Draft
-                    </option>
+                            >
 
-                    <option value="review">
-                        Review
-                    </option>
+                                {market.label}
 
-                    <option value="approved">
-                        Approved
-                    </option>
+                            </option>
 
-                    <option value="published">
-                        Published
-                    </option>
+                        ))}
 
-                </select>
+                    </select>
+
+                </div>
+
+                <div className="calendar-filter-group">
+
+                    <FiFilter className="calendar-filter-icon" />
+
+                    <select
+
+                        value={status}
+
+                        onChange={onStatusChange}
+
+                    >
+
+                        <option value="">
+
+                            All Status
+
+                        </option>
+
+                        {Object.entries(LAUNCH_STATUS).map(
+
+                            ([value, config]) => (
+
+                                <option
+
+                                    key={value}
+
+                                    value={value}
+
+                                >
+
+                                    {config.label}
+
+                                </option>
+
+                            )
+
+                        )}
+
+                    </select>
+
+                </div>
 
             </div>
 

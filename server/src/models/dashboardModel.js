@@ -31,6 +31,7 @@ function getStats() {
     `).get();
 
 
+    console.log(review)
     console.log(nextLaunch);
 
     return {

@@ -1,43 +1,120 @@
-export default function LaunchInfo({ launch }) {
+import { FiCalendar, FiFileText, FiGlobe } from "react-icons/fi";
+
+import { parseLocalDate } from "../../utils/calendarUtils";
+
+export default function LaunchInfoCard({ launch }) {
 
     return (
 
-        <div className="bg-white rounded-lg shadow-md p-6">
+        <div
+            className="
+                rounded-2xl
+                border
+                border-gray-200
+                bg-white
+                p-8
+            "
+        >
 
-            <h2 className="text-xl font-semibold mb-6">
+            <h2 className="mb-6 text-xl font-semibold text-gray-900">
+
                 Launch Information
+
             </h2>
 
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
 
-                <div>
-                    <p className="text-sm text-gray-500">
-                        Market
-                    </p>
+                <div
+                    className="
+                        rounded-xl
+                        border
+                        border-gray-200
+                        bg-gray-50
+                        p-4
+                    "
+                >
 
-                    <p className="font-medium">
+                    <div className="flex items-center gap-2 text-gray-500">
+
+                        <FiGlobe />
+
+                        <span className="text-sm font-medium">
+
+                            Market
+
+                        </span>
+
+                    </div>
+
+                    <p className="mt-2 font-semibold text-gray-900">
+
                         {launch.market}
+
                     </p>
+
                 </div>
 
-                <div>
-                    <p className="text-sm text-gray-500">
-                        Release Date
+                <div
+                    className="
+                        rounded-xl
+                        border
+                        border-gray-200
+                        bg-gray-50
+                        p-4
+                    "
+                >
+
+                    <div className="flex items-center gap-2 text-gray-500">
+
+                        <FiCalendar />
+
+                        <span className="text-sm font-medium">
+
+                            Release Date
+
+                        </span>
+
+                    </div>
+
+                    <p className="mt-2 font-semibold text-gray-900">
+
+                        {parseLocalDate(
+                            launch.release_date
+                        ).toLocaleDateString()}
+
                     </p>
 
-                    <p className="font-medium">
-                        {new Date(launch.release_date).toLocaleDateString()}
-                    </p>
                 </div>
 
-                <div className="md:col-span-2">
+                <div
+                    className="
+                        rounded-xl
+                        border
+                        border-gray-200
+                        bg-gray-50
+                        p-5
+                        md:col-span-2
+                    "
+                >
 
-                    <p className="text-sm text-gray-500">
-                        Description
-                    </p>
+                    <div className="flex items-center gap-2 text-gray-500">
 
-                    <p className="mt-1 whitespace-pre-wrap">
-                        {launch.description || "No description provided."}
+                        <FiFileText />
+
+                        <span className="text-sm font-medium">
+
+                            Description
+
+                        </span>
+
+                    </div>
+
+                    <p className="mt-3 whitespace-pre-wrap leading-7 text-gray-700">
+
+                        {launch.description?.trim()
+                            ? launch.description
+                            : "No description provided."}
+
                     </p>
 
                 </div>

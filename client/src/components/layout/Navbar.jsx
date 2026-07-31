@@ -121,6 +121,7 @@ function Navbar() {
                         text-gray-700
                         transition-all
                         duration-200
+                        cursor-pointer
                         hover:border-violet-600
                         hover:bg-violet-600
                         hover:text-white

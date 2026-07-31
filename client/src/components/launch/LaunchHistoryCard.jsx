@@ -1,4 +1,5 @@
 import StatusBadge from "../dashboard/StatusBadge";
+import { FiClock, FiUser } from "react-icons/fi";
 
 function formatDate(date) {
 
@@ -15,11 +16,18 @@ export default function LaunchHistoryCard({ history }) {
 
     return (
 
-        <div className="bg-white rounded-lg shadow-md">
+        <div
+            className="
+                rounded-2xl
+                border
+                border-gray-200
+                bg-white
+            "
+        >
 
-            <div className="border-b px-6 py-4">
+            <div className="border-b border-gray-200 px-6 py-5">
 
-                <h2 className="text-lg font-semibold">
+                <h2 className="text-xl font-semibold text-gray-900">
 
                     Status History
 
@@ -31,11 +39,25 @@ export default function LaunchHistoryCard({ history }) {
 
                 {history.length === 0 ? (
 
-                    <p className="text-gray-500">
+                    <div
+                        className="
+                            rounded-xl
+                            border
+                            border-dashed
+                            border-gray-300
+                            bg-gray-50
+                            py-10
+                            text-center
+                        "
+                    >
 
-                        No status changes recorded.
+                        <p className="text-gray-500">
 
-                    </p>
+                            No status changes recorded.
+
+                        </p>
+
+                    </div>
 
                 ) : (
 
@@ -45,46 +67,93 @@ export default function LaunchHistoryCard({ history }) {
 
                             <div
                                 key={entry.id}
-                                className="relative pl-8"
+                                className="relative flex gap-4"
                             >
 
-                                {index !== history.length - 1 && (
+                                {/* Timeline */}
+
+                                <div className="relative flex flex-col items-center">
 
                                     <div
-                                        className="absolute left-[9px] top-6 w-px h-full bg-gray-300"
+                                        className="
+                                            h-4
+                                            w-4
+                                            rounded-full
+                                            bg-violet-500
+                                            ring-4
+                                            ring-violet-100
+                                        "
                                     />
 
-                                )}
+                                    {index !== history.length - 1 && (
+
+                                        <div
+                                            className="
+                                                mt-2
+                                                h-full
+                                                w-px
+                                                bg-gray-200
+                                            "
+                                        />
+
+                                    )}
+
+                                </div>
+
+                                {/* Content */}
 
                                 <div
-                                    className="absolute left-0 top-1 h-5 w-5 rounded-full bg-violet-500"
-                                />
-
-                                <div className="space-y-2">
+                                    className="
+                                        flex-1
+                                        rounded-xl
+                                        border
+                                        border-gray-200
+                                        bg-gray-50
+                                        p-4
+                                    "
+                                >
 
                                     <StatusBadge
                                         status={entry.new_status}
                                     />
 
-                                    <p className="text-sm text-gray-500">
+                                    <div className="mt-3 space-y-2 text-sm">
 
-                                        {formatDate(entry.changed_at)}
+                                        <div className="flex items-center gap-2 text-gray-500">
 
-                                    </p>
+                                            <FiClock className="text-gray-400" />
 
-                                    {entry.changed_by && (
+                                            <span>
 
-                                        <p className="text-sm text-gray-600">
-
-                                            by <span className="font-medium">
-
-                                                {entry.changed_by}
+                                                {formatDate(entry.changed_at)}
 
                                             </span>
 
-                                        </p>
+                                        </div>
 
-                                    )}
+                                        {entry.changed_by && (
+
+                                            <div className="flex items-center gap-2 text-gray-600">
+
+                                                <FiUser className="text-gray-400" />
+
+                                                <span>
+
+                                                    Changed by{" "}
+
+                                                    <strong>
+
+                                                        {entry.changed_by}
+
+                                                    </strong>
+
+                                                </span>
+
+                                            </div>
+
+                                        )}
+
+                                    </div>
 
                                 </div>
 

@@ -7,7 +7,8 @@ import {
     FiTrash2,
     FiSend,
     FiCheckCircle,
-    FiUploadCloud
+    FiUploadCloud,
+    FiInfo
 } from "react-icons/fi";
 
 import { useAuth } from "../../context/AuthContext";
@@ -54,8 +55,6 @@ export default function LaunchActionsCard({
 
             setLoading(true);
 
-            console.log("Voy a cambiar el estado", launch.id, status);
-
             await LaunchService.changeStatus(
                 launch.id,
                 status
@@ -68,8 +67,10 @@ export default function LaunchActionsCard({
         }
         catch (error) {
 
+            console.error(error);
+
             toast.error(
-                error.response?.data?.message ||
+                error.response?.data?.message ??
                 "Failed to update launch."
             );
 
@@ -84,16 +85,12 @@ export default function LaunchActionsCard({
 
     async function handleDelete() {
 
-        const confirmed = window.confirm(
-
-            "Are you sure you want to delete this launch?"
-
-        );
-
-        if (!confirmed) {
-
+        if (
+            !window.confirm(
+                "Are you sure you want to delete this launch?"
+            )
+        ) {
             return;
-
         }
 
         try {
@@ -113,8 +110,10 @@ export default function LaunchActionsCard({
         }
         catch (error) {
 
+            console.error(error);
+
             toast.error(
-                error.response?.data?.message ||
+                error.response?.data?.message ??
                 "Failed to delete launch."
             );
 
@@ -135,129 +134,147 @@ export default function LaunchActionsCard({
 
     }
 
+    const actions = [
+
+        canEdit && {
+            label: "Edit Launch",
+            icon: <FiEdit2 />,
+            onClick: handleEdit
+        },
+
+        canDelete && {
+            label: "Delete Launch",
+            icon: <FiTrash2 />,
+            variant: "danger",
+            onClick: handleDelete
+        },
+
+        canSubmit && {
+            label: "Submit for Review",
+            icon: <FiSend />,
+            onClick: () => changeStatus("review")
+        },
+
+        canApprove && {
+            label: "Approve Launch",
+            icon: <FiCheckCircle />,
+            variant: "success",
+            onClick: () => changeStatus("approved")
+        },
+
+        canPublish && {
+            label: "Publish Launch",
+            icon: <FiUploadCloud />,
+            onClick: () => changeStatus("published")
+        }
+
+    ].filter(Boolean);
+
     return (
 
-        <div className="bg-white rounded-lg shadow-md">
+        <div
+            className="
+                rounded-2xl
+                border
+                border-gray-200
+                bg-white
+            "
+        >
 
-            <div className="border-b px-6 py-4">
+            <div className="border-b border-gray-200 px-6 py-5">
 
-                <h2 className="text-lg font-semibold">
+                <h2 className="text-xl font-semibold text-gray-900">
 
                     Actions
 
                 </h2>
 
+                <p className="mt-1 text-sm text-gray-500">
+
+                    Available actions based on your role and the current launch status.
+
+                </p>
+
             </div>
 
-            <div className="p-6 space-y-3">
+            <div className="space-y-3 p-6">
 
-                {canEdit && (
+                {loading && (
 
-                    <ActionButton
+                    <div
+                        className="
+                            rounded-xl
+                            border
+                            border-violet-200
+                            bg-violet-50
+                            px-4
+                            py-3
+                            text-sm
+                            text-violet-700
+                        "
+                    >
 
-                        icon={<FiEdit2 />}
+                        Processing request...
 
-                        label="Edit Launch"
-
-                        onClick={handleEdit}
-
-                        disabled={loading}
-
-                    />
-
-                )}
-
-                {canDelete && (
-
-                    <ActionButton
-
-                        icon={<FiTrash2 />}
-
-                        label="Delete Launch"
-
-                        variant="danger"
-
-                        onClick={handleDelete}
-
-                        disabled={loading}
-
-                    />
+                    </div>
 
                 )}
 
-                {canSubmit && (
+                {actions.length > 0 ? (
 
-                    <ActionButton
+                    actions.map(action => (
 
-                        icon={<FiSend />}
+                        <ActionButton
 
-                        label="Submit for Review"
+                            key={action.label}
 
-                        onClick={() =>
+                            icon={action.icon}
 
-                            changeStatus("review")
+                            label={action.label}
 
-                        }
+                            variant={action.variant}
 
-                        disabled={loading}
+                            onClick={action.onClick}
 
-                    />
+                            disabled={loading}
 
-                )}
+                        />
 
-                {canApprove && (
+                    ))
 
-                    <ActionButton
+                ) : (
 
-                        icon={<FiCheckCircle />}
+                    <div
+                        className="
+                            flex
+                            flex-col
+                            items-center
+                            rounded-xl
+                            border
+                            border-dashed
+                            border-gray-300
+                            bg-gray-50
+                            px-6
+                            py-10
+                            text-center
+                        "
+                    >
 
-                        label="Approve Launch"
+                        <FiInfo className="text-3xl text-gray-400" />
 
-                        variant="success"
+                        <p className="mt-4 font-medium text-gray-700">
 
-                        onClick={() =>
+                            No actions available
 
-                            changeStatus("approved")
+                        </p>
 
-                        }
+                        <p className="mt-1 text-sm text-gray-500">
 
-                        disabled={loading}
+                            There are currently no actions you can perform on this launch.
 
-                    />
+                        </p>
 
-                )}
-
-                {canPublish && (
-
-                    <ActionButton
-
-                        icon={<FiUploadCloud />}
-
-                        label="Publish Launch"
-
-                        onClick={() =>
-
-                            changeStatus("published")
-
-                        }
-
-                        disabled={loading}
-
-                    />
-
-                )}
-
-                {!canEdit &&
-                    !canDelete &&
-                    !canSubmit &&
-                    !canApprove &&
-                    !canPublish && (
-
-                    <p className="text-sm text-gray-500">
-
-                        There are no available actions for this launch.
-
-                    </p>
+                    </div>
 
                 )}
 

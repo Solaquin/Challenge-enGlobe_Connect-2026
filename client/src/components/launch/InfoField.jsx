@@ -7,15 +7,39 @@ export default function InfoField({
 
     return (
 
-        <div>
+        <div
+            className="
+                rounded-xl
+                border
+                border-gray-200
+                bg-gray-50
+                p-4
+            "
+        >
 
-            <p className="text-sm font-medium text-gray-500">
+            <p
+                className="
+                    text-xs
+                    font-semibold
+                    uppercase
+                    tracking-wide
+                    text-gray-500
+                "
+            >
 
                 {label}
 
             </p>
 
-            <p className="mt-1 font-semibold text-gray-900">
+            <p
+                className="
+                    mt-2
+                    text-sm
+                    font-semibold
+                    text-gray-900
+                    break-words
+                "
+            >
 
                 {value || "-"}
 

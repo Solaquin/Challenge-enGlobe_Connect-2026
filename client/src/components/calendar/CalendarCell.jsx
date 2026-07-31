@@ -1,9 +1,13 @@
+import { useMemo, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { useState } from "react";
 
 import CalendarDayModal from "./CalendarDayModal";
+
 import { LAUNCH_STATUS } from "../../constants/launchStatusColors";
+
 import "./Calendar.css";
+
+const MAX_VISIBLE_EVENTS = 2;
 
 export default function CalendarCell({
 
@@ -16,79 +20,129 @@ export default function CalendarCell({
 
     const navigate = useNavigate();
 
-    const today = new Date();
-
     const [openModal, setOpenModal] = useState(false);
 
+    const isToday = useMemo(() => {
 
-    const isToday =
-        date.toDateString() === today.toDateString();
+        return date.toDateString() === new Date().toDateString();
 
-    const MAX_VISIBLE_EVENTS = 2;
+    }, [date]);
 
-    const visibleLaunches = launches.slice(0, MAX_VISIBLE_EVENTS);
-    const hiddenCount = launches.length - MAX_VISIBLE_EVENTS;
+    const visibleLaunches = launches.slice(
+
+        0,
+
+        MAX_VISIBLE_EVENTS
+
+    );
+
+    const hiddenCount = Math.max(
+
+        launches.length - MAX_VISIBLE_EVENTS,
+
+        0
+
+    );
+
+    function handleLaunchClick(id) {
+
+        navigate(`/dashboard/launches/${id}`);
+
+    }
 
     return (
 
         <div
-            className={`calendar-cell ${!currentMonth ? "outside" : ""}`}
+            className={`
+                calendar-cell
+                ${!currentMonth ? "outside" : ""}
+            `}
         >
 
             <div
-                className={`calendar-day ${
-                    isToday ? "today" : ""
-                }`}
+                className={`
+                    calendar-day
+                    ${isToday ? "today" : ""}
+                `}
             >
-            
+
                 {day}
-            
+
             </div>
 
             <div className="calendar-events">
 
-                {visibleLaunches.map(launch => {
+                {visibleLaunches.map((launch) => {
 
-                    const statusStyle = LAUNCH_STATUS[launch.status];
-                    
-                    return (<div
+                    const statusStyle =
+                        LAUNCH_STATUS[launch.status];
 
-                        key={launch.id}
+                    return (
 
-                        className="calendar-event"
+                        <button
 
-                        style={{
+                            key={launch.id}
 
-                            background: statusStyle.bg,
-                            color: statusStyle.color,
-                            border: `1px solid ${statusStyle.border}`
+                            type="button"
 
-                        }}
+                            className="calendar-event"
 
-                        onClick={() =>
-                            navigate(`/dashboard/launches/${launch.id}`)}
-                    >
-                        
+                            style={{
 
-                        <div className="calendar-event-dot" />
+                                background: statusStyle.bg,
 
-                            <span>
+                                color: statusStyle.color,
+
+                                border: `1px solid ${statusStyle.border}`
+
+                            }}
+
+                            onClick={() =>
+
+                                handleLaunchClick(
+
+                                    launch.id
+
+                                )
+
+                            }
+
+                            title={`${launch.title} (${statusStyle.label})`}
+
+                        >
+
+                            <div className="calendar-event-dot" />
+
+                            <span className="truncate">
+
                                 {launch.title}
+
                             </span>
 
-                    </div>);
+                        </button>
+
+                    );
 
                 })}
 
                 {hiddenCount > 0 && (
 
                     <button
+
+                        type="button"
+
                         className="calendar-more"
-                        onClick={() => setOpenModal(true)}
+
+                        onClick={() =>
+
+                            setOpenModal(true)
+
+                        }
+
                     >
-                    
+
                         +{hiddenCount} more
-                    
+
                     </button>
 
                 )}
@@ -103,12 +157,15 @@ export default function CalendarCell({
 
                 launches={launches}
 
-                onClose={() => setOpenModal(false)}
+                onClose={() =>
+
+                    setOpenModal(false)
+
+                }
 
             />
 
         </div>
-        
 
     );
 
