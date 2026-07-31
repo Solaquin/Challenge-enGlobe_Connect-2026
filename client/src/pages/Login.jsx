@@ -1,12 +1,17 @@
 import { useState } from "react";
 import { Navigate, useNavigate } from "react-router-dom";
-import { FiLock, FiMail } from "react-icons/fi";
+import {
+    FiArrowRight,
+    FiEye,
+    FiEyeOff,
+    FiLock,
+    FiMail
+} from "react-icons/fi";
 import { FaRocket } from "react-icons/fa";
 import { toast } from "react-hot-toast";
 
 import AuthService from "../services/authService";
 import { useAuth } from "../context/AuthContext";
-
 
 function Login() {
 
@@ -16,6 +21,9 @@ function Login() {
 
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
+
+    const [showPassword, setShowPassword] = useState(false);
+
     const [loading, setLoading] = useState(false);
 
     if (isAuthenticated) {
@@ -56,6 +64,7 @@ function Login() {
             toast.error(
 
                 error.response?.data?.message ??
+
                 "Invalid email or password."
 
             );
@@ -73,11 +82,14 @@ function Login() {
 
         <div
             className="
-                flex
                 min-h-screen
+                bg-gradient-to-br
+                from-slate-50
+                via-white
+                to-violet-50
+                flex
                 items-center
                 justify-center
-                bg-gray-50
                 p-6
             "
         >
@@ -85,194 +97,447 @@ function Login() {
             <div
                 className="
                     w-full
-                    max-w-md
-                    rounded-2xl
-                    border
-                    border-gray-200
-                    bg-white
-                    p-8
-                    shadow-sm
+                    max-w-6xl
+                    grid
+                    lg:grid-cols-2
+                    gap-10
+                    items-center
                 "
             >
 
-                <div className="mb-8 text-center">
+                {/* FORM */}
+
+                <div>
+
+                    <div className="mb-10">
+
+                        <div className="flex items-center gap-3">
+
+                            <div
+                                className="
+                                    h-12
+                                    w-12
+                                    rounded-xl
+                                    bg-violet-600
+                                    text-white
+                                    flex
+                                    items-center
+                                    justify-center
+                                "
+                            >
+
+                                <FaRocket />
+
+                            </div>
+
+                            <div>
+
+                                <h1 className="text-2xl font-bold">
+
+                                    LaunchFlow
+
+                                </h1>
+
+                                <p className="text-gray-500">
+
+                                    Campaign Management Platform
+
+                                </p>
+
+                            </div>
+
+                        </div>
+
+                    </div>
 
                     <div
                         className="
-                            mx-auto
-                            mb-4
-                            flex
-                            h-16
-                            w-16
-                            items-center
-                            justify-center
-                            rounded-2xl
-                            bg-violet-100
-                            text-violet-600
+                            rounded-3xl
+                            bg-white
+                            border
+                            border-gray-200
+                            shadow-sm
+                            p-10
                         "
                     >
 
-                        <FaRocket className="text-3xl" />
+                        <h2 className="text-3xl font-bold">
+
+                            Welcome back
+
+                        </h2>
+
+                        <p className="text-gray-500 mt-2">
+
+                            Sign in to manage your product launches.
+
+                        </p>
+
+                        <form
+                            onSubmit={handleSubmit}
+                            className="mt-8 space-y-6"
+                        >
+
+                            <div>
+
+                                <label className="block mb-2 font-medium">
+
+                                    Email
+
+                                </label>
+
+                                <div className="relative">
+
+                                    <FiMail
+                                        className="
+                                            absolute
+                                            left-4
+                                            top-1/2
+                                            -translate-y-1/2
+                                            text-gray-400
+                                        "
+                                    />
+
+                                    <input
+
+                                        type="email"
+
+                                        required
+
+                                        value={email}
+
+                                        onChange={(e) =>
+
+                                            setEmail(e.target.value)
+
+                                        }
+
+                                        placeholder="name@company.com"
+
+                                        className="
+                                            w-full
+                                            h-12
+                                            rounded-xl
+                                            border
+                                            border-gray-300
+                                            pl-11
+                                            pr-4
+                                            focus:ring-4
+                                            focus:ring-violet-100
+                                            focus:border-violet-500
+                                            outline-none
+                                        "
+
+                                    />
+
+                                </div>
+
+                            </div>
+
+                            <div>
+
+                                <div
+                                    className="
+                                        flex
+                                        justify-between
+                                        mb-2
+                                    "
+                                >
+
+                                    <label className="font-medium">
+
+                                        Password
+
+                                    </label>
+
+                                    <button
+                                        type="button"
+                                        className="
+                                            text-sm
+                                            text-violet-600
+                                        "
+                                    >
+
+                                        Forgot password?
+
+                                    </button>
+
+                                </div>
+
+                                <div className="relative">
+
+                                    <FiLock
+                                        className="
+                                            absolute
+                                            left-4
+                                            top-1/2
+                                            -translate-y-1/2
+                                            text-gray-400
+                                        "
+                                    />
+
+                                    <input
+
+                                        type={
+
+                                            showPassword
+
+                                                ? "text"
+
+                                                : "password"
+
+                                        }
+
+                                        required
+
+                                        value={password}
+
+                                        onChange={(e) =>
+
+                                            setPassword(
+
+                                                e.target.value
+
+                                            )
+
+                                        }
+
+                                        placeholder="••••••••"
+
+                                        className="
+                                            w-full
+                                            h-12
+                                            rounded-xl
+                                            border
+                                            border-gray-300
+                                            pl-11
+                                            pr-12
+                                            focus:ring-4
+                                            focus:ring-violet-100
+                                            focus:border-violet-500
+                                            outline-none
+                                        "
+
+                                    />
+
+                                    <button
+
+                                        type="button"
+
+                                        onClick={() =>
+
+                                            setShowPassword(
+
+                                                !showPassword
+
+                                            )
+
+                                        }
+
+                                        className="
+                                            absolute
+                                            right-4
+                                            top-1/2
+                                            -translate-y-1/2
+                                            text-gray-400
+                                        "
+
+                                    >
+
+                                        {
+
+                                            showPassword
+
+                                                ? <FiEyeOff />
+
+                                                : <FiEye />
+
+                                        }
+
+                                    </button>
+
+                                </div>
+
+                            </div>
+
+                            <button
+
+                                type="submit"
+
+                                disabled={loading}
+
+                                className="
+                                    w-full
+                                    h-12
+                                    rounded-xl
+                                    bg-violet-600
+                                    hover:bg-violet-700
+                                    text-white
+                                    font-semibold
+                                    transition
+                                    flex
+                                    justify-center
+                                    items-center
+                                    gap-2
+                                    disabled:opacity-60
+                                "
+
+                            >
+
+                                {
+
+                                    loading
+
+                                        ? "Signing in..."
+
+                                        : <>
+
+                                            Sign In
+
+                                            <FiArrowRight />
+
+                                        </>
+
+                                }
+
+                            </button>
+
+                        </form>
 
                     </div>
-
-                    <h1 className="text-3xl font-bold text-gray-900">
-
-                        Launch Management
-
-                    </h1>
-
-                    <p className="mt-2 text-gray-500">
-
-                        Sign in to continue
-
-                    </p>
 
                 </div>
 
-                <form
-                    onSubmit={handleSubmit}
-                    className="space-y-5"
-                >
+                {/* RIGHT PANEL */}
 
-                    <div>
+                <div className="hidden lg:block">
 
-                        <label className="mb-2 block text-sm font-medium text-gray-700">
-
-                            Email
-
-                        </label>
-
-                        <div className="relative">
-
-                            <FiMail
-                                className="
-                                    absolute
-                                    left-3
-                                    top-1/2
-                                    -translate-y-1/2
-                                    text-gray-400
-                                "
-                            />
-
-                            <input
-
-                                type="email"
-
-                                value={email}
-
-                                onChange={(e) =>
-
-                                    setEmail(e.target.value)
-
-                                }
-
-                                placeholder="Enter your email"
-
-                                required
-
-                                className="
-                                    w-full
-                                    rounded-xl
-                                    border
-                                    border-gray-300
-                                    py-3
-                                    pl-10
-                                    pr-4
-                                    focus:border-violet-500
-                                    focus:outline-none
-                                    focus:ring-4
-                                    focus:ring-violet-100
-                                "
-
-                            />
-
-                        </div>
-
-                    </div>
-
-                    <div>
-
-                        <label className="mb-2 block text-sm font-medium text-gray-700">
-
-                            Password
-
-                        </label>
-
-                        <div className="relative">
-
-                            <FiLock
-                                className="
-                                    absolute
-                                    left-3
-                                    top-1/2
-                                    -translate-y-1/2
-                                    text-gray-400
-                                "
-                            />
-
-                            <input
-
-                                type="password"
-
-                                value={password}
-
-                                onChange={(e) =>
-
-                                    setPassword(e.target.value)
-
-                                }
-
-                                placeholder="Enter your password"
-
-                                required
-
-                                className="
-                                    w-full
-                                    rounded-xl
-                                    border
-                                    border-gray-300
-                                    py-3
-                                    pl-10
-                                    pr-4
-                                    focus:border-violet-500
-                                    focus:outline-none
-                                    focus:ring-4
-                                    focus:ring-violet-100
-                                "
-
-                            />
-
-                        </div>
-
-                    </div>
-
-                    <button
-
-                        type="submit"
-
-                        disabled={loading}
-
+                    <div
                         className="
-                            w-full
-                            rounded-xl
-                            bg-violet-600
-                            py-3
-                            font-medium
-                            text-white
-                            transition-colors
-                            hover:bg-violet-700
-                            disabled:cursor-not-allowed
-                            disabled:opacity-60
+                            relative
+                            overflow-hidden
+                            rounded-3xl
+                            h-[700px]
+                            shadow-xl
                         "
-
                     >
 
-                        {loading ? "Signing in..." : "Sign In"}
+                        <img
 
-                    </button>
+                            src="https://images.unsplash.com/photo-1552664730-d307ca884978?w=1200"
 
-                </form>
+                            alt="Office"
+
+                            className="
+                                w-full
+                                h-full
+                                object-cover
+                            "
+
+                        />
+
+                        <div
+                            className="
+                                absolute
+                                inset-0
+                                bg-gradient-to-t
+                                from-black/60
+                                to-transparent
+                            "
+                        />
+
+                        <div
+                            className="
+                                absolute
+                                bottom-8
+                                left-8
+                                right-8
+                                space-y-4
+                            "
+                        >
+
+                            <div
+                                className="
+                                    rounded-2xl
+                                    bg-white/90
+                                    backdrop-blur
+                                    p-6
+                                "
+                            >
+
+                                <div className="text-4xl font-bold">
+
+                                    24
+
+                                </div>
+
+                                <div className="text-gray-600">
+
+                                    Active Launches
+
+                                </div>
+
+                            </div>
+
+                            <div
+                                className="
+                                    grid
+                                    grid-cols-2
+                                    gap-4
+                                "
+                            >
+
+                                <div
+                                    className="
+                                        rounded-2xl
+                                        bg-white/90
+                                        p-5
+                                    "
+                                >
+
+                                    <div className="text-2xl font-bold">
+
+                                        8
+
+                                    </div>
+
+                                    <div className="text-sm text-gray-500">
+
+                                        Markets
+
+                                    </div>
+
+                                </div>
+
+                                <div
+                                    className="
+                                        rounded-2xl
+                                        bg-white/90
+                                        p-5
+                                    "
+                                >
+
+                                    <div className="text-2xl font-bold">
+
+                                        96%
+
+                                    </div>
+
+                                    <div className="text-sm text-gray-500">
+
+                                        Success Rate
+
+                                    </div>
+
+                                </div>
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                </div>
 
             </div>
 
