@@ -37,7 +37,22 @@ const LaunchService = {
         const response = await api.delete(`/launches/${id}`);
 
         return response.data;
-    }
+    },
+
+    async changeStatus(id, status) {
+
+        console.log("Service", id, status);
+        
+        const response = await api.patch(
+        
+            `/launches/${id}/status`,
+            { status }
+        
+        );
+    
+        return response.data;
+
+}
 
 };
 

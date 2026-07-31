@@ -40,6 +40,7 @@ export default function ActionButton({
                 py-2.5
                 font-medium
                 transition-colors
+                cursor-pointer
 
                 ${variants[variant]}
 

@@ -57,28 +57,28 @@ export default function LaunchHistoryCard({ history }) {
                                 )}
 
                                 <div
-                                    className="absolute left-0 top-1 h-5 w-5 rounded-full bg-blue-500"
+                                    className="absolute left-0 top-1 h-5 w-5 rounded-full bg-violet-500"
                                 />
 
                                 <div className="space-y-2">
 
                                     <StatusBadge
-                                        status={entry.status}
+                                        status={entry.new_status}
                                     />
 
                                     <p className="text-sm text-gray-500">
 
-                                        {formatDate(entry.created_at)}
+                                        {formatDate(entry.changed_at)}
 
                                     </p>
 
-                                    {entry.user_name && (
+                                    {entry.changed_by && (
 
                                         <p className="text-sm text-gray-600">
 
                                             by <span className="font-medium">
 
-                                                {entry.user_name}
+                                                {entry.changed_by}
 
                                             </span>
 

@@ -47,7 +47,8 @@ export default function LaunchDetail() {
                 HistoryService.getHistory(id)
 
             ]);
-
+        
+            console.log(historyData.data);
             setLaunch(launchData);
             setAssets(assetsData.data);
             setHistory(historyData.data);

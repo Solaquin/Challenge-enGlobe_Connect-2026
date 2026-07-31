@@ -1,6 +1,11 @@
 import { FiUploadCloud } from "react-icons/fi";
 import UploadedFileItem from "./UploadedFileItems";
+import AssetItem from "./AssetItem";
 import { useState } from "react";
+
+import AssetService from "../../services/assetsService";
+
+import toast from "react-hot-toast";
 
 const MAX_SIZE = 20 * 1024 * 1024;
 
@@ -23,7 +28,7 @@ const ALLOWED_TYPES = [
 ];
 
 
-function UploadAssets({ files, setFiles }) {
+function UploadAssets({ existingAssets = [], setAssets, files, setFiles }) {
 
     const [fileErrors, setFileErrors] = useState([]);
     
@@ -59,24 +64,44 @@ function UploadAssets({ files, setFiles }) {
 
     validFiles.forEach(file => {
 
+        const alreadyExists = existingAssets.some(asset =>
+            asset.original_name === file.name &&
+            asset.file_size === file.size
+        );
+    
+        if (alreadyExists) {
+        
+            errors.push({
+            
+                file: file.name,
+                message: "This asset already exists."
+            
+            });
+        
+            return;
+        
+        }
+    
         const exists = mergedFiles.some(existingFile =>
             existingFile.name === file.name &&
             existingFile.size === file.size
         );
-
+    
         if (exists) {
-
+        
             errors.push({
+            
                 file: file.name,
                 message: "File already added."
+            
             });
-
+        
         } else {
-
+        
             mergedFiles.push(file);
-
+        
         }
-
+    
     });
 
     setFiles(mergedFiles);
@@ -95,6 +120,33 @@ function UploadAssets({ files, setFiles }) {
     function handleChange(e) {
 
         handleFiles(e.target.files);
+
+    }
+
+    async function handleDeleteAsset(assetId) {
+
+
+        console.log("Deleting asset:", assetId);
+        if (!window.confirm("Delete this asset?")) {
+
+            return;
+        }
+
+        try {
+
+            await AssetService.deleteAsset(assetId);
+
+            setAssets(prev =>
+                prev.filter(asset => asset.id !== assetId)
+            );
+
+            toast.success("Asset deleted.");
+
+        }
+        catch(error) {
+            console.error(error);
+
+        }
 
     }
 
@@ -152,6 +204,41 @@ function UploadAssets({ files, setFiles }) {
                 />
 
             </label>
+
+            {
+                existingAssets.length > 0 && (
+                
+                    <div className="mt-6">
+    
+                        <h4 className="font-medium mb-3">
+                
+                            Existing Assets
+                
+                        </h4>
+                
+                        <div className="space-y-3">
+                
+                            {
+                                existingAssets.map(asset => (
+                                
+                                    <AssetItem
+
+                                        key={asset.id}
+
+                                        asset={asset}
+
+                                        onDelete={handleDeleteAsset}
+
+                                    />
+                                ))
+                            }
+
+                        </div>
+                        
+                    </div>
+
+                )
+            }
 
             {
                 fileErrors.length > 0 && (

@@ -25,7 +25,7 @@ function getStats() {
             title,
             release_date
         FROM launches
-        WHERE release_date >= DATE('now') and status = 'approved'
+        WHERE release_date >= DATE('now') AND status IN ('approved', 'published')
         ORDER BY release_date ASC
         LIMIT 1
     `).get();

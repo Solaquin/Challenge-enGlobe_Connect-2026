@@ -25,9 +25,6 @@ export function uploadAsset(req, res) {
 
         }
 
-        console.log("req.file:", req.file);
-        console.log("req.files:", req.files);
-
         if (!req.files || req.files.length === 0) {
 
             return res.status(400).json({
@@ -148,7 +145,11 @@ export function deleteAsset(req, res) {
 
     try {
 
+        console.log("Deleting asset:", req.params.id);
+
         const asset = AssetModel.getAssetById(req.params.id);
+
+        console.log(asset);
 
         if (!asset) {
 
@@ -161,7 +162,9 @@ export function deleteAsset(req, res) {
 
         }
 
-        fs.removeSync(asset.file_path);
+        if (asset.file_path && fs.existsSync(asset.file_path)) {
+            fs.removeSync(asset.file_path);
+        }
 
         AssetModel.deleteAsset(req.params.id);
 

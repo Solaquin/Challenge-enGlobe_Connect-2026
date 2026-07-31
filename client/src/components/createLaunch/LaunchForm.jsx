@@ -1,7 +1,4 @@
-import { useState } from "react";
-
-import LaunchService from "../../services/launchService";
-import AssetService from "../../services/assetsService";
+import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 
 import FormField from "./FormField";
@@ -10,24 +7,59 @@ import TextAreaField from "./TextAreaField";
 import UploadAssets from "./UploadAssets";
 import { MARKETS } from "../../constants/markets";
 
-import toast from "react-hot-toast";
 
 
-function LaunchForm() {
+function LaunchForm({
+
+    initialValues = null,
+    initialAssets = [],
+    onSubmit,
+    submitLabel = "Create Launch",
+    onCancel
+
+}) {
 
     const navigate = useNavigate();
 
-    const [formData, setFormData] = useState({
+    const defaultValues = {
 
         title: "",
-
         description: "",
-
+        market: "",
         release_date: "",
-
         status: "draft"
 
-    });
+    };
+
+    const [formData, setFormData] = useState(defaultValues);
+
+    useEffect(() => {
+
+        if (initialValues) {
+
+            setFormData({
+
+                ...defaultValues,
+
+                ...initialValues,
+
+                release_date: initialValues.release_date
+                    ? initialValues.release_date.split("T")[0]
+                    : ""
+
+            });
+
+        }
+
+    }, [initialValues]);
+
+    const [existingAssets, setExistingAssets] = useState([]);
+
+    useEffect(() => {
+
+        setExistingAssets(initialAssets);
+
+    }, [initialAssets]);
 
     const [files, setFiles] = useState([]);
 
@@ -54,39 +86,22 @@ function LaunchForm() {
         if (!validate()) return;
 
         try {
-
             setLoading(true);
 
-            const response = await LaunchService.createLaunch(formData);
+            await onSubmit({
 
-            const launchId = response.id;
+                formData,
+                files
 
-            if (files.length > 0) {
-
-                await AssetService.uploadAssets(
-                    launchId,
-                    files
-                );
-
-            }
-
-            toast.success("Launch created successfully.");
-
-            navigate("/dashboard");
-
-        } catch (error) {
-
-            toast.error(
-                error.response?.data?.message ??
-                "Something went wrong."
-            );
+            });
 
         }
         finally {
 
             setLoading(false);
 
-        }   
+        }
+
     }
 
     function validate() {
@@ -180,6 +195,9 @@ function LaunchForm() {
             </div>
             <div className="mt-8">
                 <UploadAssets
+                    existingAssets={existingAssets}
+
+                    setAssets={setExistingAssets}
 
                     files={files}
 
@@ -193,7 +211,7 @@ function LaunchForm() {
 
                 <button
                     type="button"
-                    onClick={() => navigate("/dashboard")}
+                    onClick={onCancel}
                     className="
                         px-6
                         py-3
@@ -223,13 +241,7 @@ function LaunchForm() {
                 >
                 
                     {
-                    
-                    loading
-                    
-                    ? "Creating..."
-                    
-                    : "Create Launch"
-                    
+                        loading ? "Saving..." : submitLabel
                     }
 
                 </button>

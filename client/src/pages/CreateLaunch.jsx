@@ -1,7 +1,43 @@
 import Layout from "../components/layout/Layout";
 import LaunchForm from "../components/createLaunch/LaunchForm";
 
+import LaunchService from "../services/launchService";
+import AssetService from "../services/assetsService";
+
+import toast from "react-hot-toast";
+import { useNavigate } from "react-router-dom";
+
 function CreateLaunch() {
+
+    const navigate = useNavigate();
+
+    async function handleCreate({
+        formData,
+        files
+
+    }) {
+
+        const response = await LaunchService.createLaunch(
+
+            formData
+        );
+
+        if (files.length > 0) {
+
+            await AssetService.uploadAssets(
+
+                response.id,
+                files
+
+            );
+
+        }
+
+        toast.success("Launch created.");
+
+        navigate("/dashboard");
+
+    }
 
     return (
 
@@ -21,7 +57,11 @@ function CreateLaunch() {
 
                 </p>
 
-                <LaunchForm />
+                <LaunchForm
+                    onSubmit={handleCreate}
+                    submitLabel="Create Launch"
+                    onCancel={() => navigate("/dashboard")}
+                />
 
             </div>
 

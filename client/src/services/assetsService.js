@@ -29,6 +29,14 @@ const AssetService = {
         );
 
         return response.data;
+    },
+
+    async deleteAsset(assetId) {
+
+        const response = await api.delete(`/assets/${assetId}`);
+
+        return response.data;
+
     }
 
 };

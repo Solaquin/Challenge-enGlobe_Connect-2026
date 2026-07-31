@@ -12,7 +12,7 @@ import {
 
 import { useAuth } from "../../context/AuthContext";
 
-import LaunchService from "../../services/LaunchService";
+import LaunchService from "../../services/launchService";
 
 import ActionButton from "./ActionButton";
 
@@ -53,6 +53,8 @@ export default function LaunchActionsCard({
         try {
 
             setLoading(true);
+
+            console.log("Voy a cambiar el estado", launch.id, status);
 
             await LaunchService.changeStatus(
                 launch.id,

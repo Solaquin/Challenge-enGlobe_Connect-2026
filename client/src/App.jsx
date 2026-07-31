@@ -5,6 +5,7 @@ import Login from "./pages/Login";
 import Dashboard from "./pages/Dashboard";
 import CreateLaunch from "./pages/CreateLaunch";
 import LaunchDetail from "./pages/LaunchDetails"
+import EditLaunch from "./pages/EditLaunch";
 
 import ProtectedRoute from "./routes/protectedRoutes";
 import RoleProtectedRoute from "./routes/roleProtectedRoute";
@@ -21,7 +22,7 @@ function App() {
             />
             <Routes>
                 <Route path="/login" element={<Login />} />
-                
+
                 <Route path="/dashboard" element={
                     <ProtectedRoute>
                       <Dashboard />
@@ -33,6 +34,14 @@ function App() {
                     <CreateLaunch />
                   </RoleProtectedRoute>
                 }/>
+
+                <Route
+                  path="/dashboard/launches/:id/edit"
+                  element={
+                    <RoleProtectedRoute allowedRoles={["creator"]}>
+                      <EditLaunch />
+                    </RoleProtectedRoute>
+                  }/>
 
                 <Route
                   path="/dashboard/launches/:id"
