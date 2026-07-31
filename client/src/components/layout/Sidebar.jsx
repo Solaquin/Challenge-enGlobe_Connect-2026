@@ -126,7 +126,7 @@ function Sidebar() {
 
             {/* Navigation */}
 
-            <nav className="flex-1 px-5">
+            <nav className="flex-1 px-5 py-5">
 
                 <p className="mb-3 px-4 text-xs font-semibold uppercase tracking-wider text-gray-400">
 
