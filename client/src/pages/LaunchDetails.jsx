@@ -48,7 +48,6 @@ export default function LaunchDetail() {
 
             ]);
         
-            console.log(historyData.data);
             setLaunch(launchData);
             setAssets(assetsData.data);
             setHistory(historyData.data);

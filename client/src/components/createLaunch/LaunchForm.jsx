@@ -53,13 +53,7 @@ function LaunchForm({
 
     }, [initialValues]);
 
-    const [existingAssets, setExistingAssets] = useState([]);
-
-    useEffect(() => {
-
-        setExistingAssets(initialAssets);
-
-    }, [initialAssets]);
+    const [existingAssets, setExistingAssets] = useState(initialAssets || []);
 
     const [files, setFiles] = useState([]);
 

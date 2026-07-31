@@ -37,7 +37,6 @@ function Dashboard() {
 
         try {
             const response = await DashboardService.getStats();
-            console.log("Dashboard stats:", response.data);
             setStats(response.data);
 
         } catch (error) {

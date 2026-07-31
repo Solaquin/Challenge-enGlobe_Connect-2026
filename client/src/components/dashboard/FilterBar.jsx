@@ -1,3 +1,5 @@
+import { MARKETS } from "../../constants/markets";
+
 function FilterBar({
 
     filters,
@@ -36,7 +38,7 @@ function FilterBar({
                     name="status"
                     value={filters.status}
                     onChange={handleChange}
-                    className="outline-none border border-gray-300 rounded-lg px-4 py-2 focus:border-violet-500"
+                    className="outline-none border border-gray-300 rounded-lg px-4 py-2 focus:border-violet-500 cursor-pointer"
                 >
 
                     <option value="">All Status</option>
@@ -47,14 +49,30 @@ function FilterBar({
 
                 </select>
 
-                <input
-                    type="text"
+                <select
                     name="market"
                     placeholder="Market"
                     value={filters.market}
                     onChange={handleChange}
-                    className="outline-none border border-gray-300 rounded-lg px-4 py-2 focus:border-violet-500"
-                />
+                    className="outline-none border border-gray-300 rounded-lg px-4 py-2 focus:border-violet-500 cursor-pointer"
+                >
+                        <option value="">
+                            All Markets
+                        </option>
+
+                        {
+                            MARKETS.map((market) => (
+                        
+                            <option
+                                key={market.value}
+                                value={market.value}
+                            >
+                                {market.label}
+                            </option>
+
+                        ))}
+
+                </select>
 
                 <input
                     type="date"

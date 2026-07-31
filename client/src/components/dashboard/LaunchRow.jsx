@@ -1,6 +1,9 @@
 import StatusBadge from "./StatusBadge";
+import { useNavigate } from "react-router-dom";
 
 function LaunchRow({ launch }) {
+
+    const navigate = useNavigate();
 
     return (
 
@@ -25,6 +28,7 @@ function LaunchRow({ launch }) {
             <td className="p-4">
 
                 <button
+                    onClick={() => navigate(`/dashboard/launches/${launch.id}`)}
                     className="
                         bg-violet-600
                         text-white
@@ -32,6 +36,7 @@ function LaunchRow({ launch }) {
                         py-2
                         rounded-lg
                         hover:bg-violet-800
+                        cursor-pointer
                     "
                 >
 
