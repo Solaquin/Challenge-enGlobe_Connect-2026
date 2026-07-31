@@ -1,49 +1,36 @@
-import { Link } from "react-router-dom";
-
-import { useAuth } from "../../context/AuthContext";
-
 function PageHeader() {
-
-    const { user } = useAuth();
 
     return (
 
-        <div className="flex justify-between items-center mb-8">
+        <div className="mb-6">
 
-            <div>
+            <span
+                className="
+                    inline-flex
+                    items-center
+                    rounded-full
+                    bg-violet-100
+                    px-3
+                    py-1
+                    text-xs
+                    font-semibold
+                    text-violet-700
+                "
+            >
+                Product Management
+            </span>
 
-                <h1 className="text-4xl font-bold">
+            <h1 className="mt-3 text-4xl font-bold tracking-tight text-gray-900">
 
-                    Launches
+                Launches
 
-                </h1>
+            </h1>
 
-                <p className="text-gray-500 mt-1">
+            <p className="mt-2 max-w-2xl text-gray-500">
 
-                    Manage and monitor all product launches.
+                Manage and monitor all product launches from a single place.
 
-                </p>
-
-            </div>
-            {
-                user?.role === "creator" && (
-                    <Link
-                        to="/dashboard/launches/new"
-                        className="
-                            bg-violet-600
-                            hover:bg-violet-700
-                            text-white
-                            px-6
-                            py-3
-                            rounded-xl
-                            font-medium
-                        "
-                    >
-                        + New Launch
-                    </Link>
-                )
-            }
-            
+            </p>
 
         </div>
 

@@ -64,8 +64,6 @@ function Dashboard() {
 
         <Layout>
 
-            <PageHeader />
-
             <FilterBar filters={filters} setFilters={setFilters} />
 
             <StatsSection stats={stats} />

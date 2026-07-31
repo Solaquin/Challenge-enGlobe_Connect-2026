@@ -5,17 +5,48 @@ function StatusBadge({ status }) {
     const current = LAUNCH_STATUS[status] ?? {
 
         label: status,
-
-        badgeClass: "bg-gray-100 text-gray-700"
+        bg: "#F3F4F6",
+        color: "#374151",
+        border: "#E5E7EB"
 
     };
+
+    const Icon = current.icon;
 
     return (
 
         <span
-            className={`inline-flex items-center rounded-full px-3 py-1 text-xs font-semibold ${current.badgeClass}`}
+            className="
+                inline-flex
+                items-center
+                gap-2
+                rounded-full
+                border
+                px-3
+                py-1
+                text-xs
+                font-semibold
+                transition-colors
+            "
+            style={{
+
+                backgroundColor: current.bg,
+                color: current.color,
+                borderColor: current.border
+
+            }}
         >
-            {current.label}
+
+            {Icon && (
+
+                <Icon
+                    className="h-3.5 w-3.5 flex-shrink-0"
+                />
+
+            )}
+
+            <span>{current.label}</span>
+
         </span>
 
     );
