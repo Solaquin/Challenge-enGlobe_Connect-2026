@@ -12,8 +12,10 @@ export function getAllLaunches(req, res) {
             market: req.query.market,
             status: req.query.status,
             release_date: req.query.release_date,
-            search: req.query.search
+            search: req.query.search,
 
+            month: req.query.month,
+            year: req.query.year
         };
 
         const launches = LaunchModel.getLaunches(filters, req.user);

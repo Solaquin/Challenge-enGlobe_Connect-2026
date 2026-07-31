@@ -49,6 +49,18 @@ export function getLaunches(filters = {}, user) {
         release_date: "release_date"
     };
 
+    if (filters.month && filters.year) {
+
+        query += `
+            AND strftime('%m', release_date) = ?
+            AND strftime('%Y', release_date) = ?
+        `;
+
+        params.push(String(filters.month).padStart(2, "0"));
+        params.push(String(filters.year));
+
+    }
+
     for (const [key, column] of Object.entries(filterMap)) {
 
         if (filters[key]) {

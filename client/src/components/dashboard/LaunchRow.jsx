@@ -7,41 +7,42 @@ function LaunchRow({ launch }) {
 
     return (
 
-        <tr className="border-b hover:bg-gray-50">
+        <tr className="border-b border-gray-100 hover:bg-gray-50 transition-colors duration-150">
 
-            <td className="p-4 font-medium">
+            <td className="px-6 py-4 font-medium text-gray-900">
                 {launch.title}
             </td>
 
-            <td className="p-4">
+            <td className="px-6 py-4 text-gray-600">
                 {launch.market}
             </td>
 
-            <td className="p-4">
+            <td className="px-6 py-4 text-gray-600">
                 {launch.release_date}
             </td>
 
-            <td className="p-4">
-                <StatusBadge status={launch.status} />
+            <td className="px-6 py-4">
+                <StatusBadge status={launch.status}/>
             </td>
 
-            <td className="p-4">
+            <td className="px-6 py-4 text-right">
 
                 <button
                     onClick={() => navigate(`/dashboard/launches/${launch.id}`)}
                     className="
-                        bg-violet-600
-                        text-white
-                        px-6
-                        py-2
                         rounded-lg
+                        bg-violet-600
+                        px-10
+                        py-2
+                        text-sm
+                        font-medium
+                        text-white
+                        transition-colors
                         hover:bg-violet-800
                         cursor-pointer
                     "
                 >
-
                     View
-
                 </button>
 
             </td>

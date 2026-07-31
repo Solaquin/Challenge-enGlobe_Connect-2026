@@ -91,7 +91,7 @@ function Sidebar() {
                 </NavLink>
 
                 <NavLink
-                    to="/dashboard/launches"
+                    to="/dashboard/calendar"
                     className={({ isActive }) =>
                         `flex items-center gap-3 rounded-xl px-4 py-3 mb-2
                         ${

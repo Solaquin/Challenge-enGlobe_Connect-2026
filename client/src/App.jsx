@@ -6,6 +6,7 @@ import Dashboard from "./pages/Dashboard";
 import CreateLaunch from "./pages/CreateLaunch";
 import LaunchDetail from "./pages/LaunchDetails"
 import EditLaunch from "./pages/EditLaunch";
+import CalendarPage from "./pages/Calendar";
 
 import ProtectedRoute from "./routes/protectedRoutes";
 import RoleProtectedRoute from "./routes/roleProtectedRoute";
@@ -26,6 +27,14 @@ function App() {
                 <Route path="/dashboard" element={
                     <ProtectedRoute>
                       <Dashboard />
+                    </ProtectedRoute>
+                }/>
+
+                <Route
+                  path="/dashboard/calendar"
+                  element={
+                    <ProtectedRoute>
+                      <CalendarPage />
                     </ProtectedRoute>
                 }/>
 
