@@ -2,6 +2,9 @@
 
 A full-stack web app for managing and tracking **product/marketing launches** — with a dashboard, a calendar view of upcoming launches, asset uploads, and role-based access control. Built as a submission for the enGlobe Connect 2026 challenge.
 
+Video challenge presentation:
+🔗 [Video](https://youtu.be/i8YqSFjUXj8)
+
 ## Project Overview and Goals
 
 enGlobe Connect centralizes the lifecycle of a "launch" (e.g. a product or campaign release) in one place, so teams don't have to track it across spreadsheets and chat threads. The goals of the project are to:
