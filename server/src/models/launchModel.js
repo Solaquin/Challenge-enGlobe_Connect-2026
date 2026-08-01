@@ -157,7 +157,7 @@ export function updateLaunchStatus(id, status) {
 
 }
 
-export function updateLaunchStatusWithHistory({launchId, previousStatus, newStatus, changedBy})
+export function updateLaunchStatusWithHistory({launchId, previousStatus, newStatus, changedBy, comment})
 {
 
     const updateStmt = db.prepare(`
@@ -172,9 +172,10 @@ export function updateLaunchStatusWithHistory({launchId, previousStatus, newStat
             launch_id,
             previous_status,
             new_status,
-            changed_by
+            changed_by,
+            comment
         )
-        VALUES (?, ?, ?, ?)
+        VALUES (?, ?, ?, ?, ?)
     `);
 
     const transaction = db.transaction((data) => {
@@ -188,7 +189,8 @@ export function updateLaunchStatusWithHistory({launchId, previousStatus, newStat
             data.launchId,
             data.previousStatus,
             data.newStatus,
-            data.changedBy
+            data.changedBy,
+            data.comment ?? null
         );
     });
 
@@ -196,7 +198,8 @@ export function updateLaunchStatusWithHistory({launchId, previousStatus, newStat
         launchId,
         previousStatus,
         newStatus,
-        changedBy
+        changedBy,
+        comment
     });
 
     return true;

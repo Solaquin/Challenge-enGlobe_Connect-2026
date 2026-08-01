@@ -35,7 +35,7 @@ function StatsCard({
 
             <div className="flex items-start justify-between">
 
-                <div>
+                <div className="flex-1 min-w-0">
 
                     <p className="text-sm font-medium text-gray-500">
 

@@ -1,5 +1,5 @@
 import StatusBadge from "../dashboard/StatusBadge";
-import { FiClock, FiUser } from "react-icons/fi";
+import { FiClock, FiUser, FiMessageSquare } from "react-icons/fi";
 
 function formatDate(date) {
 
@@ -61,7 +61,15 @@ export default function LaunchHistoryCard({ history }) {
 
                 ) : (
 
-                    <div className="space-y-6">
+                    <div
+                        className="
+                            history-scroll
+                            max-h-[450px]
+                            space-y-6
+                            overflow-y-auto
+                            pr-2
+                        "
+                    >
 
                         {history.map((entry, index) => (
 
@@ -148,6 +156,42 @@ export default function LaunchHistoryCard({ history }) {
                                                     </strong>
 
                                                 </span>
+
+                                            </div>
+
+                                        )}
+
+                                        {entry.comment && (
+
+                                            <div
+                                                className="
+                                                    mt-4
+                                                    rounded-lg
+                                                    border
+                                                    border-violet-200
+                                                    bg-violet-50
+                                                    p-3
+                                                "
+                                            >
+                                            
+                                                <div className="flex items-start gap-3">
+                                                    <FiMessageSquare
+                                                        className="
+                                                            mt-0.5
+                                                            text-violet-600
+                                                            flex-shrink-0
+                                                        "
+                                                    />
+                                                    <div>
+                                                        <p className="text-xs font-semibold uppercase tracking-wide text-violet-700">
+                                                            Comment
+                                                        </p>
+                                                        <p className="mt-1 whitespace-pre-wrap text-sm text-gray-700">
+                                                            {entry.comment}
+                                                        </p>
+                                                    </div>
+
+                                                </div>
 
                                             </div>
 

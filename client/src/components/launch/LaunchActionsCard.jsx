@@ -16,6 +16,7 @@ import { useAuth } from "../../context/AuthContext";
 import LaunchService from "../../services/launchService";
 
 import ActionButton from "./ActionButton";
+import StatusCommentModal from "./StatusCommandModal";
 
 export default function LaunchActionsCard({
 
@@ -29,6 +30,8 @@ export default function LaunchActionsCard({
     const { user } = useAuth();
 
     const [loading, setLoading] = useState(false);
+
+    const [modalConfig, setModalConfig] = useState(null);
 
     const isCreator = user.role === "creator";
     const isApprover = user.role === "approver";
@@ -49,7 +52,7 @@ export default function LaunchActionsCard({
         isApprover &&
         launch.status === "approved";
 
-    async function changeStatus(status) {
+    async function changeStatus(status, comment="") {
 
         try {
 
@@ -57,10 +60,17 @@ export default function LaunchActionsCard({
 
             await LaunchService.changeStatus(
                 launch.id,
-                status
+                status,
+                comment
             );
 
             toast.success("Launch updated successfully.");
+
+            if (status === "draft") {
+
+                navigate("/dashboard");
+                return;
+            }
 
             onRefresh();
 
@@ -126,6 +136,33 @@ export default function LaunchActionsCard({
 
     }
 
+    function openStatusModal(config) {
+
+        setModalConfig(config);
+
+    }
+
+    async function handleCommentSubmit(comment) {
+
+        try {
+
+            await changeStatus(
+
+                modalConfig.status,
+
+                comment
+
+            );
+
+        }
+        finally {
+
+            setModalConfig(null);
+
+        }
+
+    }
+
     function handleEdit() {
 
         navigate(
@@ -159,7 +196,36 @@ export default function LaunchActionsCard({
             label: "Approve Launch",
             icon: <FiCheckCircle />,
             variant: "success",
-            onClick: () => changeStatus("approved")
+            onClick: () =>
+
+                openStatusModal({                
+                    status: "approved",
+                    title: "Approve Launch",
+                    description:                
+                        "Optionally leave a comment before approving this launch.",                
+                    confirmLabel: "Approve",                
+                    required: false,                
+                    placeholder:                
+                        "Add an approval note (optional)..."                
+                })
+        },
+
+        canApprove && {
+            label: "Request Changes",
+            icon: <FiEdit2 />,
+            variant: "warning",
+            onClick: () =>
+
+                openStatusModal({                
+                    status: "draft",                
+                    title: "Request Changes",                
+                    description:                
+                        "Explain what should be updated before this launch can be approved.",                
+                    confirmLabel: "Request Changes",                
+                    required: true,                
+                    placeholder:                
+                        "Describe the requested changes..."                
+                })
         },
 
         canPublish && {
@@ -279,6 +345,20 @@ export default function LaunchActionsCard({
                 )}
 
             </div>
+
+            <StatusCommentModal
+
+                open={!!modalConfig}
+                title={modalConfig?.title}
+                description={modalConfig?.description}
+                confirmLabel={modalConfig?.confirmLabel}
+                required={modalConfig?.required}
+                placeholder={modalConfig?.placeholder}
+                onCancel={() =>
+                    setModalConfig(null)
+                }
+                onConfirm={handleCommentSubmit}
+            />
 
         </div>
 

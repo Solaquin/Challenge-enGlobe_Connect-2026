@@ -5,6 +5,7 @@ import {
     FiCalendar,
     FiPlus
 } from "react-icons/fi";
+import { FaRocket } from "react-icons/fa";
 
 import { useAuth } from "../../context/AuthContext";
 
@@ -56,7 +57,7 @@ function Sidebar() {
                             text-white
                         "
                     >
-                        L
+                        <FaRocket/>
                     </div>
 
                     <div>
@@ -161,20 +162,6 @@ function Sidebar() {
                     <FiCalendar size={18} />
 
                     Calendar
-
-                </NavLink>
-
-                <NavLink
-
-                    to="/dashboard/archive"
-
-                    className={navLinkClass}
-
-                >
-
-                    <FiFolder size={18} />
-
-                    Archive
 
                 </NavLink>
 

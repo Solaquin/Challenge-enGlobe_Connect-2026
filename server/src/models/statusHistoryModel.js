@@ -38,6 +38,8 @@ export function getHistoryByLaunchId(launchId) {
 
             h.new_status,
 
+            h.comment, 
+
             h.changed_at,
 
             u.id AS user_id,

@@ -297,7 +297,7 @@ export function updateLaunchStatus(req, res) {
 
         }
 
-        const { status } = req.body;
+        const { status, comment } = req.body;
 
         if (!validStatuses.includes(status)) {
 
@@ -313,7 +313,7 @@ export function updateLaunchStatus(req, res) {
         const transitions = {
 
             draft: ["review"],
-            review: ["approved"],
+            review: ["approved", "draft"],
             approved: ["published"],
             published: []
 
@@ -358,8 +358,12 @@ export function updateLaunchStatus(req, res) {
 
         if (
             (
-                launch.status === "review" &&
-                status === "approved"
+                launch.status === "review" && 
+                (
+                    status === "approved" ||
+                    status === "draft"
+                )
+                
             ) ||
             (
                 launch.status === "approved" &&
@@ -378,12 +382,33 @@ export function updateLaunchStatus(req, res) {
         
         }
 
+        if (
+
+            launch.status === "review" &&
+                
+            status === "draft" &&
+                
+            (!comment || !comment.trim())
+                
+        ) {
+        
+            return res.status(400).json({
+            
+                success: false,
+            
+                message: "A comment is required when requesting changes."
+            
+            });
+        
+        }
+
         LaunchModel.updateLaunchStatusWithHistory(
             {
                 launchId: req.params.id,
                 previousStatus: launch.status,
                 newStatus: status,
-                changedBy: req.user.id
+                changedBy: req.user.id,
+                comment
             }
         );
 

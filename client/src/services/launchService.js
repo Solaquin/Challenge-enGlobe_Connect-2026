@@ -39,14 +39,14 @@ const LaunchService = {
         return response.data;
     },
 
-    async changeStatus(id, status) {
+    async changeStatus(id, status, comment ="" ) {
 
         console.log("Service", id, status);
         
         const response = await api.patch(
         
             `/launches/${id}/status`,
-            { status }
+            { status, comment }
         
         );
     

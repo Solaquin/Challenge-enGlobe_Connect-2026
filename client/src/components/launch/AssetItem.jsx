@@ -52,8 +52,6 @@ function formatSize(bytes) {
 
 export default function AssetItem({ asset }) {
 
-    console.log(asset);
-
     function handleDownload() {
 
         window.open(asset.file_url, "_blank");

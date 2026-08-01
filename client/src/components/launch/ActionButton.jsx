@@ -30,6 +30,16 @@ export default function ActionButton({
             cursor-pointer
         `,
 
+        warning:`
+            border
+            border-amber-200
+            bg-amber-50
+            text-amber-700
+            hover:bg-amber-100
+            hover:border-amber-400
+            cursor-pointer
+        `,
+
         danger: `
             border
             border-red-200

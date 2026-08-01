@@ -22,8 +22,8 @@ function StatusBadge({ status }) {
                 gap-2
                 rounded-full
                 border
-                px-3
-                py-1
+                px-5    
+                py-2
                 text-xs
                 font-semibold
                 transition-colors
